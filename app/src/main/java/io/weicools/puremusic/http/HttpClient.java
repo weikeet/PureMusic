@@ -3,6 +3,7 @@ package io.weicools.puremusic.http;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.BitmapCallback;
@@ -24,6 +25,7 @@ import okhttp3.Call;
  */
 
 public class HttpClient {
+    public static final  String TAG = HttpClient.class.getSimpleName();
     private static final String BASE_URL = "http://tingapi.ting.baidu.com/v1/restserver/ting";
     private static final String SPLASH_URL = "http://cn.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1";
 
@@ -46,16 +48,19 @@ public class HttpClient {
                 .execute(new JsonCallback<Splash>(Splash.class) {
                     @Override
                     public void onError(Call call, Exception e, int id) {
+                        Log.e(TAG, "getSplash onError: " + e.getMessage());
                         callback.onFail(e);
                     }
 
                     @Override
                     public void onResponse(Splash response, int id) {
+                        Log.i(TAG, "getSplash onSuccess: " + id);
                         callback.onSuccess(response);
                     }
 
                     @Override
                     public void onAfter(int id) {
+                        Log.d(TAG, "getSplash onFinish: " + id);
                         callback.onFinish();
                     }
                 });
@@ -67,6 +72,7 @@ public class HttpClient {
                     @Override
                     public void onError(Call call, Exception e, int id) {
                         if (callback != null) {
+                            Log.e(TAG, "downloadFile onError: " + e.getMessage());
                             callback.onFail(e);
                         }
                     }
@@ -74,6 +80,7 @@ public class HttpClient {
                     @Override
                     public void onResponse(File response, int id) {
                         if (callback != null) {
+                            Log.i(TAG, "downloadFile onSuccess: " + id);
                             callback.onSuccess(response);
                         }
                     }
@@ -81,6 +88,7 @@ public class HttpClient {
                     @Override
                     public void onAfter(int id) {
                         if (callback != null) {
+                            Log.d(TAG, "downloadFile onFinish: " + id);
                             callback.onFinish();
                         }
                     }
@@ -100,16 +108,19 @@ public class HttpClient {
                 .execute(new JsonCallback<OnlineMusicList>(OnlineMusicList.class) {
                     @Override
                     public void onError(Call call, Exception e, int id) {
+                        Log.e(TAG, "getSongListInfo onError: " + e.getMessage());
                         callback.onFail(e);
                     }
 
                     @Override
                     public void onResponse(OnlineMusicList response, int id) {
+                        Log.i(TAG, "getSongListInfo onSuccess: " + id);
                         callback.onSuccess(response);
                     }
 
                     @Override
                     public void onAfter(int id) {
+                        Log.d(TAG, "getSongListInfo onFinish: " + id);
                         callback.onFinish();
                     }
                 });
@@ -122,17 +133,20 @@ public class HttpClient {
                 .build()
                 .execute(new JsonCallback<DownloadInfo>(DownloadInfo.class) {
                     @Override
-                    public void onResponse(DownloadInfo response, int id) {
-                        callback.onSuccess(response);
-                    }
-
-                    @Override
                     public void onError(Call call, Exception e, int id) {
+                        Log.e(TAG, "getMusicDownloadInfo onError: " + e.getMessage());
                         callback.onFail(e);
                     }
 
                     @Override
+                    public void onResponse(DownloadInfo response, int id) {
+                        Log.i(TAG, "getMusicDownloadInfo onSuccess: " + id);
+                        callback.onSuccess(response);
+                    }
+
+                    @Override
                     public void onAfter(int id) {
+                        Log.d(TAG, "getMusicDownloadInfo onFinish: " + id);
                         callback.onFinish();
                     }
                 });
@@ -142,17 +156,20 @@ public class HttpClient {
         OkHttpUtils.get().url(url).build()
                 .execute(new BitmapCallback() {
                     @Override
-                    public void onResponse(Bitmap bitmap, int id) {
-                        callback.onSuccess(bitmap);
-                    }
-
-                    @Override
                     public void onError(Call call, Exception e, int id) {
+                        Log.e(TAG, "getBitmap onError: " + e.getMessage());
                         callback.onFail(e);
                     }
 
                     @Override
+                    public void onResponse(Bitmap bitmap, int id) {
+                        Log.i(TAG, "getBitmap onSuccess: " + id);
+                        callback.onSuccess(bitmap);
+                    }
+
+                    @Override
                     public void onAfter(int id) {
+                        Log.d(TAG, "getBitmap onFinish: " + id);
                         callback.onFinish();
                     }
                 });
@@ -165,17 +182,20 @@ public class HttpClient {
                 .build()
                 .execute(new JsonCallback<Lrc>(Lrc.class) {
                     @Override
-                    public void onResponse(Lrc response, int id) {
-                        callback.onSuccess(response);
-                    }
-
-                    @Override
                     public void onError(Call call, Exception e, int id) {
+                        Log.e(TAG, "getLrc onError: " + e.getMessage());
                         callback.onFail(e);
                     }
 
                     @Override
+                    public void onResponse(Lrc response, int id) {
+                        Log.i(TAG, "getLrc onSuccess: " + id);
+                        callback.onSuccess(response);
+                    }
+
+                    @Override
                     public void onAfter(int id) {
+                        Log.d(TAG, "getLrc onFinish: " + id);
                         callback.onFinish();
                     }
                 });
@@ -188,17 +208,20 @@ public class HttpClient {
                 .build()
                 .execute(new JsonCallback<SearchMusic>(SearchMusic.class) {
                     @Override
-                    public void onResponse(SearchMusic response, int id) {
-                        callback.onSuccess(response);
-                    }
-
-                    @Override
                     public void onError(Call call, Exception e, int id) {
+                        Log.e(TAG, "searchMusic onError: " + e.getMessage());
                         callback.onFail(e);
                     }
 
                     @Override
+                    public void onResponse(SearchMusic response, int id) {
+                        Log.i(TAG, "searchMusic onSuccess: " + id);
+                        callback.onSuccess(response);
+                    }
+
+                    @Override
                     public void onAfter(int id) {
+                        Log.d(TAG, "searchMusic onFinish: " + id);
                         callback.onFinish();
                     }
                 });
@@ -211,17 +234,20 @@ public class HttpClient {
                 .build()
                 .execute(new JsonCallback<ArtistInfo>(ArtistInfo.class) {
                     @Override
-                    public void onResponse(ArtistInfo response, int id) {
-                        callback.onSuccess(response);
-                    }
-
-                    @Override
                     public void onError(Call call, Exception e, int id) {
+                        Log.e(TAG, "getArtistInfo onError: " + e.getMessage());
                         callback.onFail(e);
                     }
 
                     @Override
+                    public void onResponse(ArtistInfo response, int id) {
+                        Log.i(TAG, "getArtistInfo onSuccess: " + id);
+                        callback.onSuccess(response);
+                    }
+
+                    @Override
                     public void onAfter(int id) {
+                        Log.d(TAG, "getArtistInfo onFinish: " + id);
                         callback.onFinish();
                     }
                 });

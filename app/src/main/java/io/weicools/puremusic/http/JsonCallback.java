@@ -1,5 +1,7 @@
 package io.weicools.puremusic.http;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.zhy.http.okhttp.callback.Callback;
 
@@ -25,7 +27,7 @@ public abstract class JsonCallback<T> extends Callback<T> {
             String jsonStr = response.body().string();
             return mGson.fromJson(jsonStr, mClass);
         } catch (Exception e) {
-
+            Log.e("JsonCallback", "parseNetworkResponse error: " + e.getMessage());
         }
 
         return null;
