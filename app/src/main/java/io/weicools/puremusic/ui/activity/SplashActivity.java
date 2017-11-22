@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ImageView;
@@ -23,19 +22,19 @@ import java.util.Calendar;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.weicools.puremusic.AppCache;
-import io.weicools.puremusic.MainActivity;
 import io.weicools.puremusic.R;
 import io.weicools.puremusic.http.HttpCallback;
 import io.weicools.puremusic.http.HttpClient;
 import io.weicools.puremusic.model.Splash;
 import io.weicools.puremusic.service.EventCallback;
 import io.weicools.puremusic.service.MusicService;
+import io.weicools.puremusic.ui.base.BaseActivity;
 import io.weicools.puremusic.util.FileUtil;
 import io.weicools.puremusic.util.PermissionUtil;
 import io.weicools.puremusic.util.Preferences;
 import io.weicools.puremusic.util.ToastUtil;
 
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends BaseActivity {
     private static final String TAG = "SplashActivity";
     private static final String SPLASH_FILE_NAME = "Splash";
 

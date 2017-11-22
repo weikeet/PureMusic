@@ -1,7 +1,9 @@
-package io.weicools.puremusic;
+package io.weicools.puremusic.ui.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import io.weicools.puremusic.R;
 
 public class MainActivity extends AppCompatActivity {
 
