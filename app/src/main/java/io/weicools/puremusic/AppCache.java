@@ -10,6 +10,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.weicools.puremusic.executor.DownloadMusicInfo;
 import io.weicools.puremusic.model.Music;
 import io.weicools.puremusic.model.SongListInfo;
 import io.weicools.puremusic.service.MusicService;
@@ -26,7 +27,7 @@ public class AppCache {
     // 本地歌曲列表
     private final List<Music> mMusicList = new ArrayList<>();
     // 歌单列表
-    private final List<SongListInfo> mSongListInfos = new ArrayList<>();
+    private final List<SongListInfo> mSongListInfo = new ArrayList<>();
     private final List<Activity> mActivityStack = new ArrayList<>();
     private final LongSparseArray<DownloadMusicInfo> mDownloadList = new LongSparseArray<>();
 
@@ -71,7 +72,7 @@ public class AppCache {
     }
 
     public static List<SongListInfo> getSongListInfos() {
-        return getInstance().mSongListInfos;
+        return getInstance().mSongListInfo;
     }
 
     public static void clearStack() {
