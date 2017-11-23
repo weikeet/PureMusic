@@ -51,21 +51,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         getWindow().setStatusBarColor(Color.TRANSPARENT);
     }
 
-    @Override
-    public void setContentView(int layoutResID) {
-        super.setContentView(layoutResID);
-        //initView();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        setListener();
-    }
-
-    protected void setListener() {
-    }
-
     public MusicService getMusicService() {
         MusicService musicService = AppCache.getPlayService();
         if (musicService == null) {

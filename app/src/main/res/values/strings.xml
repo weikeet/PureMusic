@@ -29,4 +29,17 @@
     <!--share Music-->
     <string name="share_music">我用%1$s分享了歌曲《%2$s》%3$s</string>
     <string name="unable_to_share">暂时无法分享</string>
+    <string name="menu_setting">设置</string>
+    <string name="menu_timer">定时播放</string>
+    <string name="menu_night">夜间模式</string>
+    <string name="menu_about">关于音乐</string>
+    <string name="menu_exit">退出应用</string>
+    <string name="tv_local_music">我的音乐</string>
+    <string name="tv_online_music">在线音乐</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="timer_set">设置成功，将于%s分钟后关闭</string>
+    <string name="timer_cancel">定时停止播放已取消</string>
 </resources>
