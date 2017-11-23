@@ -43,4 +43,14 @@
     <string name="timer_set">设置成功，将于%s分钟后关闭</string>
     <string name="timer_cancel">定时停止播放已取消</string>
     <string name="download_success">%s下载完成</string>
+    <string name="no_local_music">暂无本地音乐</string>
+
+    <string name="music_info">歌曲信息</string>
+
+    <string name="no_permission_storage">没有存储空间权限，无法扫描本地歌曲！</string>
+    <string name="no_permission_setting">没有权限，无法设置铃声，请授予权限</string>
+    <string name="grant_permission_setting">授权成功，请在再次操作以设置铃声</string>
+    <string name="no_permission_select_image">没有权限，无法选择图片！</string>
+    <string name="setting_ringtone_success">设置铃声成功</string>
+    <string name="delete_music">删除%s？</string>
 </resources>

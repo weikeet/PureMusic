@@ -4,10 +4,22 @@
     android:layout_height="match_parent"
     tools:context="io.weicools.puremusic.ui.fragment.LocalMusicFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ListView
+        android:id="@+id/lv_local_music"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:divider="@null"
+        android:paddingBottom="@dimen/play_bar_height" />
 
+    <TextView
+        android:id="@+id/tv_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/screen_tips_top"
+        android:text="@string/no_local_music"
+        android:textColor="@color/grey"
+        android:textSize="14sp"
+        android:visibility="gone" />
 </FrameLayout>

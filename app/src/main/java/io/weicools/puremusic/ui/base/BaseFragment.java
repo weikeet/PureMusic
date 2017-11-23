@@ -27,7 +27,7 @@ public abstract class BaseFragment extends Fragment {
 
     }
 
-    protected MusicService getPlayService() {
+    protected MusicService getMusicService() {
         MusicService musicService = AppCache.getPlayService();
         if (musicService == null) {
             throw new NullPointerException("play service is null");

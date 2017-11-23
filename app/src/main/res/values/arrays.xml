@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string-array name="local_music_dialog">
+        <item>分享</item>
+        <item>设为铃声</item>
+        <item>@string/music_info</item>
+        <item>删除</item>
+    </string-array>
+
     <string-array name="timer_text">
         <item>不开启</item>
         <item>10分钟后</item>

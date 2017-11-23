@@ -130,7 +130,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mProgressBar.setProgress((int) getMusicService().getCurrentPosition());
 
         if (mLocalMusicFragment != null && mLocalMusicFragment.isAdded()) {
-            // mLocalMusicFragment.onItemPlay();
+            mLocalMusicFragment.onItemPlay();
         }
     }
 
@@ -293,7 +293,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public void onMusicListUpdate() {
         if (mLocalMusicFragment != null && mLocalMusicFragment.isAdded()) {
-            // mLocalMusicFragment.onMusicListUpdate();
+            mLocalMusicFragment.onMusicListUpdate();
         }
     }
 
@@ -326,7 +326,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             @Override
             public void run() {
                 mViewPager.setCurrentItem(savedInstanceState.getInt(ConstantUtil.VIEW_PAGER_INDEX), false);
-                // mLocalMusicFragment.onRestoreInstanceState(savedInstanceState);
+                mLocalMusicFragment.onRestoreInstanceState(savedInstanceState);
                 // mPlayListFragment.onRestoreInstanceState(savedInstanceState);
             }
         });
