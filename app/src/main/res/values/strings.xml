@@ -42,4 +42,5 @@
 
     <string name="timer_set">设置成功，将于%s分钟后关闭</string>
     <string name="timer_cancel">定时停止播放已取消</string>
+    <string name="download_success">%s下载完成</string>
 </resources>

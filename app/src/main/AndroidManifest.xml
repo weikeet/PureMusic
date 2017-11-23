@@ -51,16 +51,16 @@
 
         <service android:name=".service.MusicService" />
 
-        <!--<receiver android:name=".receiver.DownloadReceiver">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.DOWNLOAD_COMPLETE" />-->
-            <!--</intent-filter>-->
-        <!--</receiver>-->
-        <!--<receiver android:name=".receiver.RemoteControlReceiver">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MEDIA_BUTTON" />-->
-            <!--</intent-filter>-->
-        <!--</receiver>-->
+        <receiver android:name=".receiver.DownloadReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".receiver.RemoteControlReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </receiver>
 
         <receiver android:name=".receiver.StatusBarReceiver"
             tools:ignore="ExportedReceiver">
