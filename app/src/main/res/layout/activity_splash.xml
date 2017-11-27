@@ -5,6 +5,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <include
+        layout="@layout/include_app_bar"
+        android:visibility="gone" />
+
     <ImageView
         android:id="@+id/iv_splash"
         android:layout_width="match_parent"

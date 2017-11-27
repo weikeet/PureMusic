@@ -10,7 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -22,6 +24,8 @@ import io.weicools.puremusic.adapter.OnlineMusicAdapter;
 import io.weicools.puremusic.executor.DownloadOnlineMusic;
 import io.weicools.puremusic.executor.PlayOnlineMusic;
 import io.weicools.puremusic.executor.ShareOnlineMusic;
+import io.weicools.puremusic.http.HttpCallback;
+import io.weicools.puremusic.http.HttpClient;
 import io.weicools.puremusic.model.Music;
 import io.weicools.puremusic.model.OnlineMusic;
 import io.weicools.puremusic.model.OnlineMusicList;
@@ -123,12 +127,71 @@ public class OnlineMusicActivity extends BaseActivity implements AutoLoadListVie
 
     @Override
     public void onLoad() {
-
+        getMusic(mOffset);
     }
 
-    @Override
-    public void onPointerCaptureChanged(boolean hasCapture) {
+    private void getMusic(final int offset) {
+        HttpClient.getSongListInfo(mListInfo.getType(), MUSIC_LIST_SIZE, offset, new HttpCallback<OnlineMusicList>() {
+            @Override
+            public void onSuccess(OnlineMusicList response) {
+                lvOnlineMusic.onLoadComplete();
+                mOnlineMusicList = response;
+                if (offset == 0 && response == null) {
+                    ViewUtil.changeViewState(lvOnlineMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_FAIL);
+                    return;
+                } else if (offset == 0) {
+                    initHeader();
+                    ViewUtil.changeViewState(lvOnlineMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_SUCCESS);
+                }
+                if (response == null || response.getSong_list() == null || response.getSong_list().size() == 0) {
+                    lvOnlineMusic.setEnable(false);
+                    return;
+                }
+                mOffset += MUSIC_LIST_SIZE;
+                mMusicList.addAll(response.getSong_list());
+                mAdapter.notifyDataSetChanged();
+            }
 
+            @Override
+            public void onFail(Exception e) {
+                lvOnlineMusic.onLoadComplete();
+                if (e instanceof RuntimeException) {
+                    // 歌曲全部加载完成
+                    lvOnlineMusic.setEnable(false);
+                    return;
+                }
+                if (offset == 0) {
+                    ViewUtil.changeViewState(lvOnlineMusic, llLoading, llLoadFail, LoadStateEnum.LOAD_FAIL);
+                } else {
+                    ToastUtil.showShort(mContext, getString(R.string.load_fail));
+                }
+            }
+        });
+    }
+
+    private void initHeader() {
+        final ImageView ivHeaderBg = vHeader.findViewById(R.id.iv_header_bg);
+        final ImageView ivCover = vHeader.findViewById(R.id.iv_cover);
+        TextView tvTitle = vHeader.findViewById(R.id.tv_title);
+        TextView tvUpdateDate = vHeader.findViewById(R.id.tv_update_date);
+        TextView tvComment = vHeader.findViewById(R.id.tv_comment);
+        tvTitle.setText(mOnlineMusicList.getBillboard().getName());
+        tvUpdateDate.setText(getString(R.string.recent_update, mOnlineMusicList.getBillboard().getUpdate_date()));
+        tvComment.setText(mOnlineMusicList.getBillboard().getComment());
+        // TODO: 2017/11/27 Glide 4
+//        Glide.with(this)
+//                .load(mOnlineMusicList.getBillboard().getPic_s640())
+//                .into(new SimpleTarget<Bitmap>() {
+//                    @Override
+//                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+//                        ivCover.setImageBitmap(resource);
+//                        ivHeaderBg.setImageBitmap(ImageUtil.blur(resource));
+//                    }
+//                });
+//                .asBitmap()
+//                .placeholder(R.drawable.default_cover)
+//                .error(R.drawable.default_cover)
+//                .override(200, 200)
     }
 
     private void play(OnlineMusic onlineMusic) {
