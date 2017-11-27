@@ -75,4 +75,5 @@
 
     <string name="now_play">正在播放：%s</string>
     <string name="unable_to_play">暂时无法播放</string>
+    <string name="recent_update">最近更新：%s</string>
 </resources>
