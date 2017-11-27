@@ -102,7 +102,7 @@ public class PlayListAdapter extends BaseAdapter {
             default:
                 break;
         }
-        return null;
+        return view;
     }
 
     private boolean isShowDivider(int position) {
