@@ -17,8 +17,8 @@ public class OnlineMusic {
     private String song_id;
     @SerializedName("title")
     private String title;
-    @SerializedName("title_uid")
-    private String title_uid;
+    @SerializedName("ting_uid")
+    private String ting_uid;
     @SerializedName("album_title")
     private String album_title;
     @SerializedName("artist_name")
@@ -44,8 +44,8 @@ public class OnlineMusic {
         return title;
     }
 
-    public String getTitle_uid() {
-        return title_uid;
+    public String getTing_uid() {
+        return ting_uid;
     }
 
     public String getAlbum_title() {
@@ -76,8 +76,8 @@ public class OnlineMusic {
         this.title = title;
     }
 
-    public void setTitle_uid(String title_uid) {
-        this.title_uid = title_uid;
+    public void setTing_uid(String ting_uid) {
+        this.ting_uid = ting_uid;
     }
 
     public void setAlbum_title(String album_title) {

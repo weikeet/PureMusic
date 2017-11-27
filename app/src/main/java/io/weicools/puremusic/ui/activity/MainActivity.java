@@ -327,7 +327,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             public void run() {
                 mViewPager.setCurrentItem(savedInstanceState.getInt(ConstantUtil.VIEW_PAGER_INDEX), false);
                 mLocalMusicFragment.onRestoreInstanceState(savedInstanceState);
-                // mPlayListFragment.onRestoreInstanceState(savedInstanceState);
+                mPlayListFragment.onRestoreInstanceState(savedInstanceState);
             }
         });
     }

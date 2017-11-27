@@ -1,10 +1,12 @@
 package io.weicools.puremusic.model;
 
+import java.io.Serializable;
+
 /**
  * Created on 2017/10/28 by weicools.
  */
 
-public class SongListInfo {
+public class SongListInfo implements Serializable {
     /**
      * #主打榜单
      * 1.新歌榜

@@ -23,7 +23,6 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.fileProvider"
@@ -43,7 +42,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.activity.MainActivity"
             android:label="@string/app_name"
@@ -61,13 +59,16 @@
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>
-
-        <receiver android:name=".receiver.StatusBarReceiver"
+        <receiver
+            android:name=".receiver.StatusBarReceiver"
             tools:ignore="ExportedReceiver">
             <intent-filter>
                 <action android:name="me.wcy.music.STATUS_BAR_ACTIONS" />
             </intent-filter>
         </receiver>
+
+        <activity android:name=".ui.activity.OnlineMusicActivity" />
+        <activity android:name=".ui.activity.ArtistInfoActivity"></activity>
     </application>
 
 </manifest>
