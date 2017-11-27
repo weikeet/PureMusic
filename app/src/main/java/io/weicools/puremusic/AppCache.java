@@ -15,6 +15,7 @@ import io.weicools.puremusic.model.Music;
 import io.weicools.puremusic.model.SongListInfo;
 import io.weicools.puremusic.service.MusicService;
 import io.weicools.puremusic.util.Preferences;
+import io.weicools.puremusic.util.ScreenUtil;
 
 /**
  * Author: weicools
@@ -49,7 +50,7 @@ public class AppCache {
         mContext = application.getApplicationContext();
 
         Preferences.init(mContext);
-        //ScreenUtils.init(mContext);
+        ScreenUtil.init(mContext);
         //CrashHandler.getInstance().init();
         //CoverLoader.getInstance().init(mContext);
         application.registerActivityLifecycleCallbacks(new ActivityLifecycle());
