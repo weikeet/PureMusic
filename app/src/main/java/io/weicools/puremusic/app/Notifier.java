@@ -1,4 +1,4 @@
-package io.weicools.puremusic;
+package io.weicools.puremusic.app;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -17,6 +17,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.weicools.puremusic.R;
 import io.weicools.puremusic.model.Music;
 import io.weicools.puremusic.receiver.StatusBarReceiver;
 import io.weicools.puremusic.service.MusicService;
@@ -35,25 +36,36 @@ public class Notifier {
     private static MusicService sMusicService;
     private static NotificationManager notificationManager;
 
-    public static void init(MusicService playService) {
+    private Notifier() {
+    }
+
+    private static class NotifierHolder {
+        private static Notifier INSTANCE = new Notifier();
+    }
+
+    public static Notifier getInstance() {
+        return NotifierHolder.INSTANCE;
+    }
+
+    public void init(MusicService playService) {
         Notifier.sMusicService = playService;
         notificationManager = (NotificationManager) playService.getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
-    public static void showPlay(Music music) {
+    public void showPlay(Music music) {
         sMusicService.startForeground(NOTIFICATION_ID, buildNotification(sMusicService, music, true));
     }
 
-    public static void showPause(Music music) {
+    public void showPause(Music music) {
         sMusicService.stopForeground(false);
         notificationManager.notify(NOTIFICATION_ID, buildNotification(sMusicService, music, false));
     }
 
-    public static void cancelAll() {
+    public void cancelAll() {
         notificationManager.cancelAll();
     }
 
-    private static Notification buildNotification(Context context, Music music, boolean isPlaying) {
+    private Notification buildNotification(Context context, Music music, boolean isPlaying) {
         Intent intent = new Intent(context, SplashActivity.class);
         intent.putExtra(ConstantUtil.EXTRA_NOTIFICATION, true);
         intent.setAction(Intent.ACTION_VIEW);
@@ -68,7 +80,7 @@ public class Notifier {
         return builder.build();
     }
 
-    private static RemoteViews getRemoteViews(Context context, Music music, boolean isPlaying) {
+    private RemoteViews getRemoteViews(Context context, Music music, boolean isPlaying) {
         String title = music.getTitle();
         String subtitle = FileUtil.getArtistAndAlbum(music.getArtist(), music.getAlbum());
         Bitmap cover = CoverLoader.getInstance().loadThumbnail(music);
@@ -99,7 +111,7 @@ public class Notifier {
         return remoteViews;
     }
 
-    private static int getPlayIconRes(boolean isLightNotificationTheme, boolean isPlaying) {
+    private int getPlayIconRes(boolean isLightNotificationTheme, boolean isPlaying) {
         if (isPlaying) {
             return isLightNotificationTheme
                     ? R.drawable.ic_status_bar_pause_dark_selector
@@ -111,18 +123,18 @@ public class Notifier {
         }
     }
 
-    private static int getNextIconRes(boolean isLightNotificationTheme) {
+    private int getNextIconRes(boolean isLightNotificationTheme) {
         return isLightNotificationTheme
                 ? R.drawable.ic_status_bar_next_dark_selector
                 : R.drawable.ic_status_bar_next_light_selector;
     }
 
-    private static boolean isLightNotificationTheme(Context context) {
+    private boolean isLightNotificationTheme(Context context) {
         int notificationTextColor = getNotificationTextColor(context);
         return isSimilarColor(Color.BLACK, notificationTextColor);
     }
 
-    private static int getNotificationTextColor(Context context) {
+    private int getNotificationTextColor(Context context) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
         Notification notification = builder.build();
         RemoteViews remoteViews = notification.contentView;
@@ -143,7 +155,7 @@ public class Notifier {
      * 如果通过 android.R.id.title 无法获得 title ，
      * 则通过遍历 notification 布局找到 textSize 最大的 TextView ，应该就是 title 了。
      */
-    private static int findTextColor(ViewGroup notificationLayout) {
+    private int findTextColor(ViewGroup notificationLayout) {
         List<TextView> textViewList = new ArrayList<>();
         findTextView(notificationLayout, textViewList);
 
@@ -162,7 +174,7 @@ public class Notifier {
         return Color.BLACK;
     }
 
-    private static void findTextView(View view, List<TextView> textViewList) {
+    private void findTextView(View view, List<TextView> textViewList) {
         if (view instanceof ViewGroup) {
             ViewGroup viewGroup = (ViewGroup) view;
             for (int i = 0; i < viewGroup.getChildCount(); i++) {
@@ -173,7 +185,7 @@ public class Notifier {
         }
     }
 
-    private static boolean isSimilarColor(int baseColor, int color) {
+    private boolean isSimilarColor(int baseColor, int color) {
         int simpleBaseColor = baseColor | 0xff000000;
         int simpleColor = color | 0xff000000;
         int baseRed = Color.red(simpleBaseColor) - Color.red(simpleColor);

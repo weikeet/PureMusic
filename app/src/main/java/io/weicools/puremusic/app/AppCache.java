@@ -1,4 +1,4 @@
-package io.weicools.puremusic;
+package io.weicools.puremusic.app;
 
 import android.app.Activity;
 import android.app.Application;
@@ -12,11 +12,12 @@ import java.util.List;
 
 import io.weicools.puremusic.executor.DownloadMusicInfo;
 import io.weicools.puremusic.model.Music;
-import io.weicools.puremusic.model.SongListInfo;
+import io.weicools.puremusic.model.SongSheetInfo;
 import io.weicools.puremusic.service.MusicService;
 import io.weicools.puremusic.util.CoverLoader;
 import io.weicools.puremusic.util.Preferences;
 import io.weicools.puremusic.util.ScreenUtil;
+import io.weicools.puremusic.util.ToastUtil;
 
 /**
  * Author: weicools
@@ -29,7 +30,7 @@ public class AppCache {
     // 本地歌曲列表
     private final List<Music> mMusicList = new ArrayList<>();
     // 歌单列表
-    private final List<SongListInfo> mSongListInfos = new ArrayList<>();
+    private final List<SongSheetInfo> mSongSheetInfos = new ArrayList<>();
     private final List<Activity> mActivityStack = new ArrayList<>();
     private final LongSparseArray<DownloadMusicInfo> mDownloadList = new LongSparseArray<>();
 
@@ -46,7 +47,7 @@ public class AppCache {
 
     public void init(Application application) {
         mContext = application.getApplicationContext();
-        //ToastUtil.init(mContext);
+        ToastUtil.init(mContext);
         Preferences.init(mContext);
         ScreenUtil.init(mContext);
         //CrashHandler.getInstance().init();
@@ -70,8 +71,8 @@ public class AppCache {
         return mMusicList;
     }
 
-    public List<SongListInfo> getSongListInfos() {
-        return mSongListInfos;
+    public List<SongSheetInfo> getSongSheetInfos() {
+        return mSongSheetInfos;
     }
 
     public void clearStack() {

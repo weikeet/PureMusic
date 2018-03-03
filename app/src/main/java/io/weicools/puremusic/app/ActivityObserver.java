@@ -1,4 +1,4 @@
-package io.weicools.puremusic;
+package io.weicools.puremusic.app;
 
 import android.app.Activity;
 import android.app.Application;
