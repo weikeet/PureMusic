@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 
+import io.weicools.puremusic.service.AudioPlayer;
 import io.weicools.puremusic.service.MusicService;
 import io.weicools.puremusic.util.ConstantUtil;
 
@@ -27,9 +28,9 @@ public class StatusBarReceiver extends BroadcastReceiver {
 
         String extra = intent.getStringExtra(EXTRA);
         if (TextUtils.equals(extra, EXTRA_NEXT)) {
-            MusicService.startCommand(context, ConstantUtil.ACTION_MEDIA_NEXT);
+            AudioPlayer.getInstance().next();
         } else if (TextUtils.equals(extra, EXTRA_PLAY_PAUSE)) {
-            MusicService.startCommand(context, ConstantUtil.ACTION_MEDIA_PLAY_PAUSE);
+            AudioPlayer.getInstance().playPause();
         }
     }
 }

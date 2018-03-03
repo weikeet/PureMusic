@@ -10,6 +10,7 @@ import com.zhy.http.okhttp.callback.BitmapCallback;
 import com.zhy.http.okhttp.callback.FileCallBack;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 
 import io.weicools.puremusic.model.ArtistInfo;
 import io.weicools.puremusic.model.DownloadInfo;
@@ -18,6 +19,7 @@ import io.weicools.puremusic.model.OnlineMusicList;
 import io.weicools.puremusic.model.SearchMusic;
 import io.weicools.puremusic.model.Splash;
 import okhttp3.Call;
+import okhttp3.OkHttpClient;
 
 /**
  * Author: weicools
@@ -42,6 +44,16 @@ public class HttpClient {
     private static final String PARAM_SONG_ID = "songid";
     private static final String PARAM_TING_UID = "tinguid";
     private static final String PARAM_QUERY = "query";
+
+    static {
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(10, TimeUnit.SECONDS)
+                .writeTimeout(10, TimeUnit.SECONDS)
+                .addInterceptor(new HttpInterceptor())
+                .build();
+        OkHttpUtils.initClient(okHttpClient);
+    }
 
     public static void getSplash(@NonNull final HttpCallback<Splash> callback) {
         OkHttpUtils.get().url(SPLASH_URL).build()

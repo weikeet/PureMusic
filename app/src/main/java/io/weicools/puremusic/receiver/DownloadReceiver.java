@@ -8,12 +8,14 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 
+import com.hwangjr.rxbus.RxBus;
+
 import java.io.File;
 
-import io.weicools.puremusic.AppCache;
+import io.weicools.puremusic.app.AppCache;
 import io.weicools.puremusic.R;
 import io.weicools.puremusic.executor.DownloadMusicInfo;
-import io.weicools.puremusic.service.MusicService;
+import io.weicools.puremusic.util.ConstantUtil;
 import io.weicools.puremusic.util.ToastUtil;
 import io.weicools.puremusic.util.id3.ID3TagUtils;
 import io.weicools.puremusic.util.id3.ID3Tags;
@@ -49,19 +51,7 @@ public class DownloadReceiver extends BroadcastReceiver {
             }
 
             // 由于系统扫描音乐是异步执行，因此延迟刷新音乐列表
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    scanMusic();
-                }
-            }, 1000);
-        }
-    }
-
-    private void scanMusic() {
-        MusicService service = AppCache.getInstance().getMusicService();
-        if (service != null) {
-            service.updateMusicList(null);
+            mHandler.postDelayed(() -> RxBus.get().post(ConstantUtil.SCAN_MUSIC, new Object()), 1000);
         }
     }
 }
