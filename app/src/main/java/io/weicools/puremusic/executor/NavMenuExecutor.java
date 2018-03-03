@@ -1,16 +1,14 @@
 package io.weicools.puremusic.executor;
 
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
 
-import io.weicools.puremusic.AppCache;
 import io.weicools.puremusic.R;
 import io.weicools.puremusic.service.MusicService;
 import io.weicools.puremusic.service.QuitTimer;
 import io.weicools.puremusic.ui.activity.MainActivity;
+import io.weicools.puremusic.util.ConstantUtil;
 import io.weicools.puremusic.util.Preferences;
 import io.weicools.puremusic.util.ToastUtil;
 
@@ -20,64 +18,62 @@ import io.weicools.puremusic.util.ToastUtil;
  */
 
 public class NavMenuExecutor {
-    public static boolean onNavigationItemSelected(MenuItem item, MainActivity activity) {
+    private MainActivity activity;
+
+    public NavMenuExecutor(MainActivity activity) {
+        this.activity = activity;
+    }
+
+    public boolean onNavigationItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_setting:
-                // startActivity(activity, SettingActivity.class);
+                // TODO: 2018/3/4 strat setting
+//                startActivity(SettingActivity.class);
                 return true;
             case R.id.action_night:
-                nightMode(activity);
+                nightMode();
                 break;
             case R.id.action_timer:
-                timerDialog(activity);
+                timerDialog();
                 return true;
             case R.id.action_exit:
-                exit(activity);
+                activity.finish();
+                MusicService.startCommand(activity, ConstantUtil.ACTION_STOP);
                 return true;
             case R.id.action_about:
-                // startActivity(activity, AboutActivity.class);
+                // TODO: 2018/3/4 start about
+//                startActivity(AboutActivity.class);
                 return true;
         }
         return false;
     }
 
-    private static void startActivity(Context context, Class<?> cls) {
-        Intent intent = new Intent(context, cls);
-        context.startActivity(intent);
+    private void startActivity(Class<?> cls) {
+        Intent intent = new Intent(activity, cls);
+        activity.startActivity(intent);
     }
 
-    private static void nightMode(final MainActivity activity) {
+    private void nightMode() {
         Preferences.saveNightMode(!Preferences.isNightMode());
         activity.recreate();
     }
 
-    private static void timerDialog(final MainActivity activity) {
+    private void timerDialog() {
         new AlertDialog.Builder(activity)
                 .setTitle(R.string.menu_timer)
-                .setItems(activity.getResources().getStringArray(R.array.timer_text), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        int[] times = activity.getResources().getIntArray(R.array.timer_int);
-                        startTimer(activity, times[which]);
-                    }
+                .setItems(activity.getResources().getStringArray(R.array.timer_text), (dialog, which) -> {
+                    int[] times = activity.getResources().getIntArray(R.array.timer_int);
+                    startTimer(times[which]);
                 })
                 .show();
     }
 
-    private static void startTimer(Context context, int minute) {
+    private void startTimer(int minute) {
         QuitTimer.getInstance().start(minute * 60 * 1000);
         if (minute > 0) {
-            ToastUtil.showShort(context, context.getString(R.string.timer_set, String.valueOf(minute)));
+            ToastUtil.showShort(activity.getString(R.string.timer_set, String.valueOf(minute)));
         } else {
-            ToastUtil.showShort(context, context.getString(R.string.timer_cancel));
-        }
-    }
-
-    private static void exit(MainActivity activity) {
-        activity.finish();
-        MusicService service = AppCache.getInstance().getMusicService();
-        if (service != null) {
-            service.quit();
+            ToastUtil.showShort(R.string.timer_cancel);
         }
     }
 }

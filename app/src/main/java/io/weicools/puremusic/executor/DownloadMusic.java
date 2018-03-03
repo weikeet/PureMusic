@@ -10,7 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
-import io.weicools.puremusic.AppCache;
+import io.weicools.puremusic.app.AppCache;
 import io.weicools.puremusic.R;
 import io.weicools.puremusic.util.FileUtil;
 import io.weicools.puremusic.util.NetworkUtil;
