@@ -76,4 +76,10 @@
     <string name="now_play">正在播放：%s</string>
     <string name="unable_to_play">暂时无法播放</string>
     <string name="recent_update">最近更新：%s</string>
+    <string name="music_ranking_list">主打榜单</string>
+    <string name="loading_1">1.加载中…</string>
+    <string name="loading_2">2.加载中…</string>
+    <string name="loading_3">3.加载中…</string>
+    <string name="song_title">歌曲</string>
+    <string name="song_singer">歌手 - 专辑</string>
 </resources>
