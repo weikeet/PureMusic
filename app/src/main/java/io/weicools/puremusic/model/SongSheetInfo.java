@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Created on 2017/10/28 by weicools.
  */
 
-public class SongListInfo implements Serializable {
+public class SongSheetInfo implements Serializable {
     /**
      * #主打榜单
      * 1.新歌榜
