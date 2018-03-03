@@ -68,7 +68,7 @@
         </receiver>
 
         <activity android:name=".ui.activity.OnlineMusicActivity" />
-        <activity android:name=".ui.activity.ArtistInfoActivity"></activity>
+        <activity android:name=".ui.activity.ArtistInfoActivity" />
     </application>
 
 </manifest>
