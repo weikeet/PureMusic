@@ -60,7 +60,7 @@ public class PlayListFragment extends BaseFragment implements AdapterView.OnItem
             return;
         }
 
-        mSongListInfos = AppCache.getSongListInfos();
+        mSongListInfos = AppCache.getInstance().getSongListInfos();
         if (mSongListInfos.isEmpty()) {
             String[] titles = getResources().getStringArray(R.array.online_music_list_title);
             String[] types = getResources().getStringArray(R.array.online_music_list_type);

@@ -162,12 +162,12 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
 
             @Override
             protected void onPostExecute(List<Music> musicList) {
-                AppCache.getMusicList().clear();
-                AppCache.getMusicList().addAll(musicList);
+                AppCache.getInstance().getMusicList().clear();
+                AppCache.getInstance().getMusicList().addAll(musicList);
 
-                if (!AppCache.getMusicList().isEmpty()) {
+                if (!AppCache.getInstance().getMusicList().isEmpty()) {
                     updatePlayingPosition();
-                    mPlayingMusic = AppCache.getMusicList().get(mPlayingPosition);
+                    mPlayingMusic = AppCache.getInstance().getMusicList().get(mPlayingPosition);
                 }
 
                 if (mPlayListener != null) {
@@ -182,18 +182,18 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     }
 
     public void play(int position) {
-        if (AppCache.getMusicList().isEmpty()) {
+        if (AppCache.getInstance().getMusicList().isEmpty()) {
             return;
         }
 
         if (position < 0) {
-            position = AppCache.getMusicList().size() - 1;
-        } else if (position >= AppCache.getMusicList().size()) {
+            position = AppCache.getInstance().getMusicList().size() - 1;
+        } else if (position >= AppCache.getInstance().getMusicList().size()) {
             position = 0;
         }
 
         mPlayingPosition = position;
-        Music music = AppCache.getMusicList().get(mPlayingPosition);
+        Music music = AppCache.getInstance().getMusicList().get(mPlayingPosition);
         Preferences.saveCurrentSongId(music.getId());
         play(music);
     }
@@ -279,14 +279,14 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     }
 
     public void next() {
-        if (AppCache.getMusicList().isEmpty()) {
+        if (AppCache.getInstance().getMusicList().isEmpty()) {
             return;
         }
 
         PlayModeEnum mode = PlayModeEnum.valueOf(Preferences.getPlayMode());
         switch (mode) {
             case SHUFFLE:
-                mPlayingPosition = new Random().nextInt(AppCache.getMusicList().size());
+                mPlayingPosition = new Random().nextInt(AppCache.getInstance().getMusicList().size());
                 play(mPlayingPosition);
                 break;
             case SINGLE:
@@ -300,14 +300,14 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     }
 
     public void prev() {
-        if (AppCache.getMusicList().isEmpty()) {
+        if (AppCache.getInstance().getMusicList().isEmpty()) {
             return;
         }
 
         PlayModeEnum mode = PlayModeEnum.valueOf(Preferences.getPlayMode());
         switch (mode) {
             case SHUFFLE:
-                mPlayingPosition = new Random().nextInt(AppCache.getMusicList().size());
+                mPlayingPosition = new Random().nextInt(AppCache.getInstance().getMusicList().size());
                 play(mPlayingPosition);
                 break;
             case SINGLE:
@@ -373,14 +373,14 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     public void updatePlayingPosition() {
         int position = 0;
         long id = Preferences.getCurrentSongId();
-        for (int i = 0; i < AppCache.getMusicList().size(); i++) {
-            if (AppCache.getMusicList().get(i).getId() == id) {
+        for (int i = 0; i < AppCache.getInstance().getMusicList().size(); i++) {
+            if (AppCache.getInstance().getMusicList().get(i).getId() == id) {
                 position = i;
                 break;
             }
         }
         mPlayingPosition = position;
-        Preferences.saveCurrentSongId(AppCache.getMusicList().get(mPlayingPosition).getId());
+        Preferences.saveCurrentSongId(AppCache.getInstance().getMusicList().get(mPlayingPosition).getId());
     }
 
     public int getAudioSessionId() {

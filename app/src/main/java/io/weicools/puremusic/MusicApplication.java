@@ -21,7 +21,7 @@ public class MusicApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        AppCache.init(this);
+        AppCache.getInstance().init(this);
         ActivityObserver.init(this);
         initOkHttpUtils();
 

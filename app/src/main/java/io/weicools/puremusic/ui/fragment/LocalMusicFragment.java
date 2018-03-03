@@ -94,7 +94,7 @@ public class LocalMusicFragment extends BaseFragment implements OnMoreClickListe
     }
 
     private void updateView() {
-        if (AppCache.getMusicList().isEmpty()) {
+        if (AppCache.getInstance().getMusicList().isEmpty()) {
             mTvEmpty.setVisibility(View.VISIBLE);
         } else {
             mTvEmpty.setVisibility(View.GONE);
@@ -106,7 +106,7 @@ public class LocalMusicFragment extends BaseFragment implements OnMoreClickListe
 
     @Override
     public void onMoreClick(int position) {
-        final Music music = AppCache.getMusicList().get(position);
+        final Music music = AppCache.getInstance().getMusicList().get(position);
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(music.getTitle());
         builder.setItems(R.array.local_music_dialog, new DialogInterface.OnClickListener() {
@@ -183,7 +183,7 @@ public class LocalMusicFragment extends BaseFragment implements OnMoreClickListe
                 File file = new File(music.getPath());
                 if (file.delete()) {
                     boolean playing = (music == getMusicService().getPlayingMusic());
-                    AppCache.getMusicList().remove(music);
+                    AppCache.getInstance().getMusicList().remove(music);
                     if (playing) {
                         getMusicService().stop();
                         getMusicService().playPause();

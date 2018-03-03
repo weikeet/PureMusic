@@ -28,12 +28,12 @@ public class LocalMusicAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return AppCache.getMusicList().size();
+        return AppCache.getInstance().getMusicList().size();
     }
 
     @Override
     public Object getItem(int i) {
-        return AppCache.getMusicList().get(i);
+        return AppCache.getInstance().getMusicList().get(i);
     }
 
     @Override
@@ -58,7 +58,7 @@ public class LocalMusicAdapter extends BaseAdapter {
             viewHolder.vPlaying.setVisibility(View.GONE);
         }
 
-        Music music = AppCache.getMusicList().get(position);
+        Music music = AppCache.getInstance().getMusicList().get(position);
         Bitmap cover = CoverLoader.getInstance().loadThumbnail(music);
         String artist = FileUtil.getArtistAndAlbum(music.getArtist(), music.getAlbum());
 
@@ -78,7 +78,7 @@ public class LocalMusicAdapter extends BaseAdapter {
     }
 
     private boolean isShowDivider(int position) {
-        return position != AppCache.getMusicList().size() - 1;
+        return position != AppCache.getInstance().getMusicList().size() - 1;
     }
 
     public void updatePlayingPosition(MusicService musicService) {

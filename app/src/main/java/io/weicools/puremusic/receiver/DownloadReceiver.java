@@ -29,7 +29,7 @@ public class DownloadReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, 0);
-        DownloadMusicInfo musicInfo = AppCache.getDownloadList().get(id);
+        DownloadMusicInfo musicInfo = AppCache.getInstance().getDownloadList().get(id);
 
         if (musicInfo != null) {
             ToastUtil.showShort(context, context.getString(R.string.download_success, musicInfo.getTitle()));
@@ -59,7 +59,7 @@ public class DownloadReceiver extends BroadcastReceiver {
     }
 
     private void scanMusic() {
-        MusicService service = AppCache.getPlayService();
+        MusicService service = AppCache.getInstance().getMusicService();
         if (service != null) {
             service.updateMusicList(null);
         }

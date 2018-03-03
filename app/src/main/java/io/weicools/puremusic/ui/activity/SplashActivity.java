@@ -74,7 +74,7 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void checkService() {
-        if (AppCache.getPlayService() == null) {
+        if (AppCache.getInstance().getMusicService() == null) {
             startService();
             showSplash();
             updateSplash();
@@ -135,7 +135,7 @@ public class SplashActivity extends BaseActivity {
                     return;
                 }
 
-                HttpClient.downloadFile(url, FileUtil.getSplashDir(AppCache.getContext()), SPLASH_FILE_NAME,
+                HttpClient.downloadFile(url, FileUtil.getSplashDir(AppCache.getInstance().getContext()), SPLASH_FILE_NAME,
                         new HttpCallback<File>() {
                             @Override
                             public void onSuccess(File file) {
@@ -168,7 +168,7 @@ public class SplashActivity extends BaseActivity {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             final MusicService playService = ((MusicService.MusicBinder) iBinder).getService();
-            AppCache.setPlayService(playService);
+            AppCache.getInstance().setMusicService(playService);
             PermissionUtil.with(SplashActivity.this)
                     .permissions(Manifest.permission.READ_EXTERNAL_STORAGE,
                             Manifest.permission.WRITE_EXTERNAL_STORAGE)

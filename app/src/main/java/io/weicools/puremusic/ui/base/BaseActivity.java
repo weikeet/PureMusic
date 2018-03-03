@@ -66,7 +66,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public MusicService getMusicService() {
-        MusicService musicService = AppCache.getPlayService();
+        MusicService musicService = AppCache.getInstance().getMusicService();
         if (musicService == null) {
             throw new NullPointerException("play service is null");
         }
@@ -74,9 +74,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     protected boolean checkServiceAlive() {
-        if (AppCache.getPlayService() == null) {
+        if (AppCache.getInstance().getMusicService() == null) {
             startActivity(new Intent(this, SplashActivity.class));
-            AppCache.clearStack();
+            AppCache.getInstance().clearStack();
             return false;
         }
 
