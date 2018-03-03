@@ -1,10 +1,12 @@
 package io.weicools.puremusic.service;
 
+import android.content.Context;
 import android.os.Handler;
-import android.support.annotation.NonNull;
+import android.os.Looper;
 import android.text.format.DateUtils;
 
-import io.weicools.puremusic.AppCache;
+import io.weicools.puremusic.app.AppCache;
+import io.weicools.puremusic.util.ConstantUtil;
 
 /**
  * Author: weicools
@@ -12,26 +14,29 @@ import io.weicools.puremusic.AppCache;
  */
 
 public class QuitTimer {
-    private MusicService mMusicService;
-    private EventCallback<Long> mTimerCallback;
+    private Context mContext;
     private Handler mHandler;
     private long mTimerRemain;
-
-    public static QuitTimer getInstance() {
-        return SingletonHolder.sInstance;
-    }
-
-    private static class SingletonHolder {
-        private static final QuitTimer sInstance = new QuitTimer();
-    }
+    private OnTimerListener mListener;
 
     private QuitTimer() {
     }
 
-    public void init(@NonNull MusicService service, @NonNull Handler handler, @NonNull EventCallback<Long> timerCallback) {
-        mMusicService = service;
-        mHandler = handler;
-        mTimerCallback = timerCallback;
+    private static class QuitTimerHolder {
+        private static final QuitTimer INSTANCE = new QuitTimer();
+    }
+
+    public static QuitTimer getInstance() {
+        return QuitTimerHolder.INSTANCE;
+    }
+
+    public void init(Context context) {
+        this.mContext = context.getApplicationContext();
+        this.mHandler = new Handler(Looper.getMainLooper());
+    }
+
+    public void setOnTimerListener(OnTimerListener listener) {
+        this.mListener = listener;
     }
 
     public void start(long milli) {
@@ -41,7 +46,9 @@ public class QuitTimer {
             mHandler.post(mQuitRunnable);
         } else {
             mTimerRemain = 0;
-            mTimerCallback.onEvent(mTimerRemain);
+            if (mListener != null) {
+                mListener.onTimer(mTimerRemain);
+            }
         }
     }
 
@@ -54,13 +61,21 @@ public class QuitTimer {
         public void run() {
             mTimerRemain -= DateUtils.SECOND_IN_MILLIS;
             if (mTimerRemain > 0) {
-                mTimerCallback.onEvent(mTimerRemain);
+                if (mListener != null) {
+                    mListener.onTimer(mTimerRemain);
+                }
                 mHandler.postDelayed(this, DateUtils.SECOND_IN_MILLIS);
             } else {
                 AppCache.getInstance().clearStack();
-                mMusicService.quit();
+                MusicService.startCommand(mContext, ConstantUtil.ACTION_STOP);
             }
         }
     };
 
+    public interface OnTimerListener {
+        /**
+         * 更新定时停止播放时间
+         */
+        void onTimer(long remain);
+    }
 }

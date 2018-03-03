@@ -1,11 +1,10 @@
 package io.weicools.puremusic.service;
 
-import android.os.Build;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 
-import io.weicools.puremusic.AppCache;
+import io.weicools.puremusic.app.AppCache;
 import io.weicools.puremusic.model.Music;
 import io.weicools.puremusic.util.CoverLoader;
 
@@ -27,20 +26,33 @@ public class MediaSessionManager {
     private MusicService mMusicService;
     private MediaSessionCompat mMediaSession;
 
-    public MediaSessionManager(MusicService service) {
-        mMusicService = service;
+    private MediaSessionManager() {
+    }
+
+    private static class MediaSessionManagerHolder {
+        private static MediaSessionManager INSTANCE = new MediaSessionManager();
+    }
+
+    public static MediaSessionManager getInstance() {
+        return MediaSessionManagerHolder.INSTANCE;
+    }
+
+    public void init(MusicService service) {
+        this.mMusicService = service;
         setupMediaSession();
     }
 
     private void setupMediaSession() {
         mMediaSession = new MediaSessionCompat(mMusicService, TAG);
-        mMediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS | MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS);
+        mMediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS
+                | MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS);
         mMediaSession.setCallback(callback);
         mMediaSession.setActive(true);
     }
 
     public void updatePlaybackState() {
-        int state = (mMusicService.isPlaying() || mMusicService.isPreparing()) ? PlaybackStateCompat.STATE_PLAYING : PlaybackStateCompat.STATE_PAUSED;
+        int state = (mMusicService.isPlaying() || mMusicService.isPreparing())
+                ? PlaybackStateCompat.STATE_PLAYING : PlaybackStateCompat.STATE_PAUSED;
         mMediaSession.setPlaybackState(
                 new PlaybackStateCompat.Builder()
                         .setActions(MEDIA_SESSION_ACTIONS)
@@ -65,12 +77,6 @@ public class MediaSessionManager {
         metaData.putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, AppCache.getInstance().getMusicList().size());
 
         mMediaSession.setMetadata(metaData.build());
-    }
-
-    public void release() {
-        mMediaSession.setCallback(null);
-        mMediaSession.setActive(false);
-        mMediaSession.release();
     }
 
     private MediaSessionCompat.Callback callback = new MediaSessionCompat.Callback() {
