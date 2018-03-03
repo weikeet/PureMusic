@@ -12,7 +12,7 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import io.weicools.puremusic.AppCache;
+import io.weicools.puremusic.app.AppCache;
 import io.weicools.puremusic.R;
 import io.weicools.puremusic.model.Music;
 
@@ -113,10 +113,10 @@ public class FileUtil {
         artist = stringFilter(artist);
         title = stringFilter(title);
         if (TextUtils.isEmpty(artist)) {
-            artist = AppCache.getContext().getString(R.string.unknown);
+            artist = AppCache.getInstance().getContext().getString(R.string.unknown);
         }
         if (TextUtils.isEmpty(title)) {
-            title = AppCache.getContext().getString(R.string.unknown);
+            title = AppCache.getInstance().getContext().getString(R.string.unknown);
         }
         return artist + " - " + title;
     }

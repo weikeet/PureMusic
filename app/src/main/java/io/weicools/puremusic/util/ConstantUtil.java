@@ -28,4 +28,7 @@ public class ConstantUtil {
     public static final String LOCAL_MUSIC_OFFSET = "local_music_offset";
     public static final String PLAYLIST_POSITION = "playlist_position";
     public static final String PLAYLIST_OFFSET = "playlist_offset";
+
+    public static final String ACTION_STOP = "io.weicools.puremusic.ACTION_STOP";
+    public static final String SCAN_MUSIC = "scan_music";
 }

@@ -10,22 +10,22 @@ import io.weicools.puremusic.model.enums.LoadStateEnum;
  */
 
 public class ViewUtil {
-    public static void changeViewState(View loadSuccess, View loading, View loadFail, LoadStateEnum state) {
+    public static void changeViewState(View success, View loading, View fail, LoadStateEnum state) {
         switch (state) {
             case LOADING:
-                loadSuccess.setVisibility(View.GONE);
+                success.setVisibility(View.GONE);
                 loading.setVisibility(View.VISIBLE);
-                loadFail.setVisibility(View.GONE);
+                fail.setVisibility(View.GONE);
                 break;
             case LOAD_SUCCESS:
-                loadSuccess.setVisibility(View.VISIBLE);
+                success.setVisibility(View.VISIBLE);
                 loading.setVisibility(View.GONE);
-                loadFail.setVisibility(View.GONE);
+                fail.setVisibility(View.GONE);
                 break;
             case LOAD_FAIL:
-                loadSuccess.setVisibility(View.GONE);
+                success.setVisibility(View.GONE);
                 loading.setVisibility(View.GONE);
-                loadFail.setVisibility(View.VISIBLE);
+                fail.setVisibility(View.VISIBLE);
                 break;
         }
     }
