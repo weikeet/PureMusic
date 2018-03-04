@@ -43,7 +43,7 @@ android {
 greendao {
     schemaVersion 1
     targetGenDir 'src/main/java'
-    daoPackage "${android.defaultConfig.applicationId}.storage.db.greendao"
+    daoPackage "${android.defaultConfig.applicationId}.data.database"
 }
 
 dependencies {
