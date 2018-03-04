@@ -10,7 +10,8 @@
         android:layout_height="wrap_content"
         android:clipToPadding="false"
         android:divider="@null"
-        android:paddingBottom="@dimen/play_bar_height" />
+        android:paddingBottom="@dimen/play_bar_height"
+        tools:listitem="@layout/item_music" />
 
     <TextView
         android:id="@+id/tv_empty"
