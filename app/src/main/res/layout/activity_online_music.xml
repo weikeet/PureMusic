@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="io.weicools.puremusic.ui.activity.OnlineMusicActivity">
+    tools:context="io.weicools.puremusic.module.online.OnlineMusicActivity">
 
     <include layout="@layout/include_app_bar" />
 

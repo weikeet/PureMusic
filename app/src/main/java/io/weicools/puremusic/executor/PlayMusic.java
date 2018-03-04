@@ -6,7 +6,7 @@ import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 
 import io.weicools.puremusic.R;
-import io.weicools.puremusic.model.Music;
+import io.weicools.puremusic.data.Music;
 import io.weicools.puremusic.util.NetworkUtil;
 import io.weicools.puremusic.util.Preferences;
 

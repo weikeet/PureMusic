@@ -5,7 +5,7 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 
 import io.weicools.puremusic.app.AppCache;
-import io.weicools.puremusic.model.Music;
+import io.weicools.puremusic.data.Music;
 import io.weicools.puremusic.util.CoverLoader;
 
 /**

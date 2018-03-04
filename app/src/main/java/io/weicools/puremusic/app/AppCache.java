@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.weicools.puremusic.executor.DownloadMusicInfo;
-import io.weicools.puremusic.model.Music;
-import io.weicools.puremusic.model.SongSheetInfo;
+import io.weicools.puremusic.data.Music;
+import io.weicools.puremusic.data.SongSheetInfo;
 import io.weicools.puremusic.service.MusicService;
 import io.weicools.puremusic.util.CoverLoader;
 import io.weicools.puremusic.util.Preferences;

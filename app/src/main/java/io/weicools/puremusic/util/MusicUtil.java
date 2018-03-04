@@ -14,7 +14,7 @@ import android.support.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.weicools.puremusic.model.Music;
+import io.weicools.puremusic.data.Music;
 
 /**
  * Author: weicools

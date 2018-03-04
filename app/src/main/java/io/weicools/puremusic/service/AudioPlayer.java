@@ -14,8 +14,9 @@ import java.util.Random;
 
 import io.weicools.puremusic.app.Notifier;
 import io.weicools.puremusic.data.database.DBManager;
-import io.weicools.puremusic.model.Music;
-import io.weicools.puremusic.model.enums.PlayModeEnum;
+import io.weicools.puremusic.data.Music;
+import io.weicools.puremusic.enums.PlayModeEnum;
+import io.weicools.puremusic.interfaze.OnPlayerEventListener;
 import io.weicools.puremusic.receiver.NoisyAudioStreamReceiver;
 import io.weicools.puremusic.util.Preferences;
 import io.weicools.puremusic.util.ToastUtil;

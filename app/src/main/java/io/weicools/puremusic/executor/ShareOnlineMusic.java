@@ -6,7 +6,7 @@ import android.content.Intent;
 import io.weicools.puremusic.R;
 import io.weicools.puremusic.http.HttpCallback;
 import io.weicools.puremusic.http.HttpClient;
-import io.weicools.puremusic.model.DownloadInfo;
+import io.weicools.puremusic.data.DownloadInfo;
 import io.weicools.puremusic.util.ToastUtil;
 
 /**

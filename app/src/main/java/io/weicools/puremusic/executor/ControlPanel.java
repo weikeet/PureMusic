@@ -8,9 +8,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import io.weicools.puremusic.R;
-import io.weicools.puremusic.model.Music;
+import io.weicools.puremusic.data.Music;
 import io.weicools.puremusic.service.AudioPlayer;
-import io.weicools.puremusic.service.OnPlayerEventListener;
+import io.weicools.puremusic.interfaze.OnPlayerEventListener;
 import io.weicools.puremusic.util.CoverLoader;
 
 /**

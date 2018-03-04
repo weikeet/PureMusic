@@ -7,9 +7,9 @@ import java.io.File;
 
 import io.weicools.puremusic.http.HttpCallback;
 import io.weicools.puremusic.http.HttpClient;
-import io.weicools.puremusic.model.DownloadInfo;
-import io.weicools.puremusic.model.Music;
-import io.weicools.puremusic.model.OnlineMusic;
+import io.weicools.puremusic.data.DownloadInfo;
+import io.weicools.puremusic.data.Music;
+import io.weicools.puremusic.data.OnlineMusic;
 import io.weicools.puremusic.util.FileUtil;
 
 /**

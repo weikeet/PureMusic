@@ -14,7 +14,7 @@ import org.greenrobot.greendao.internal.DaoConfig;
 
 import java.util.Map;
 
-import io.weicools.puremusic.model.Music;
+import io.weicools.puremusic.data.Music;
 
 /**
  * {@inheritDoc}

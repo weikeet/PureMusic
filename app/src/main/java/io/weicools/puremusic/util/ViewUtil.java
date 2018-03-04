@@ -2,7 +2,7 @@ package io.weicools.puremusic.util;
 
 import android.view.View;
 
-import io.weicools.puremusic.model.enums.LoadStateEnum;
+import io.weicools.puremusic.enums.LoadStateEnum;
 
 /**
  * Author: weicools

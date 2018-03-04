@@ -13,7 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 import io.weicools.puremusic.R;
-import io.weicools.puremusic.model.Music;
+import io.weicools.puremusic.data.Music;
 
 /**
  * Author: weicools

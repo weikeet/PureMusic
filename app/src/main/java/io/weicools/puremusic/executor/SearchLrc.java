@@ -4,8 +4,8 @@ import android.text.TextUtils;
 
 import io.weicools.puremusic.http.HttpCallback;
 import io.weicools.puremusic.http.HttpClient;
-import io.weicools.puremusic.model.Lrc;
-import io.weicools.puremusic.model.SearchMusic;
+import io.weicools.puremusic.data.Lrc;
+import io.weicools.puremusic.data.SearchMusic;
 import io.weicools.puremusic.util.FileUtil;
 
 /**

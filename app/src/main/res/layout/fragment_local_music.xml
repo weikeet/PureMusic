@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="io.weicools.puremusic.ui.fragment.LocalMusicFragment">
+    tools:context="io.weicools.puremusic.module.local.LocalMusicFragment">
 
     <ListView
         android:id="@+id/lv_local_music"

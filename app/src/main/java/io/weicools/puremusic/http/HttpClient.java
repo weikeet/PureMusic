@@ -12,12 +12,12 @@ import com.zhy.http.okhttp.callback.FileCallBack;
 import java.io.File;
 import java.util.concurrent.TimeUnit;
 
-import io.weicools.puremusic.model.ArtistInfo;
-import io.weicools.puremusic.model.DownloadInfo;
-import io.weicools.puremusic.model.Lrc;
-import io.weicools.puremusic.model.OnlineMusicList;
-import io.weicools.puremusic.model.SearchMusic;
-import io.weicools.puremusic.model.Splash;
+import io.weicools.puremusic.data.ArtistInfo;
+import io.weicools.puremusic.data.DownloadInfo;
+import io.weicools.puremusic.data.Lrc;
+import io.weicools.puremusic.data.OnlineMusicList;
+import io.weicools.puremusic.data.SearchMusic;
+import io.weicools.puremusic.data.Splash;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 

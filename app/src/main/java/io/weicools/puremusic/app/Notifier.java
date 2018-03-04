@@ -18,10 +18,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.weicools.puremusic.R;
-import io.weicools.puremusic.model.Music;
+import io.weicools.puremusic.data.Music;
 import io.weicools.puremusic.receiver.StatusBarReceiver;
 import io.weicools.puremusic.service.MusicService;
-import io.weicools.puremusic.ui.activity.SplashActivity;
+import io.weicools.puremusic.module.SplashActivity;
 import io.weicools.puremusic.util.ConstantUtil;
 import io.weicools.puremusic.util.CoverLoader;
 import io.weicools.puremusic.util.FileUtil;

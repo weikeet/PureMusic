@@ -9,7 +9,7 @@ import org.greenrobot.greendao.database.Database;
 import org.greenrobot.greendao.database.DatabaseStatement;
 import org.greenrobot.greendao.internal.DaoConfig;
 
-import io.weicools.puremusic.model.Music;
+import io.weicools.puremusic.data.Music;
 
 /**
  * Create by weicools on 2018/3/4.
