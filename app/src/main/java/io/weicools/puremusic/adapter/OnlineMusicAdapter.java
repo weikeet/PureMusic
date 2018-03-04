@@ -55,7 +55,6 @@ public class OnlineMusicAdapter extends BaseAdapter {
         }
         
         OnlineMusic onlineMusic = mData.get(position);
-        // TODO: 2017/11/27 set error and pre 
         Glide.with(parent.getContext())
                 .load(onlineMusic.getPic_small())
                 .into(viewHolder.ivCover);

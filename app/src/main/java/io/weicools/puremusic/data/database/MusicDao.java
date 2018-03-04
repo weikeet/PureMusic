@@ -20,7 +20,7 @@ import io.weicools.puremusic.model.Music;
  */
 
 public class MusicDao extends AbstractDao<Music, Long> {
-    public static final String TABLENAME = "Music";
+    public static final String TABLENAME = "SystemMessage";
 
     /**
      * Properties of entity Music.<br/>

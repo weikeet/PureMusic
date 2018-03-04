@@ -1,8 +1,9 @@
 package io.weicools.puremusic.ui.activity;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -13,6 +14,10 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -29,11 +34,13 @@ import io.weicools.puremusic.http.HttpClient;
 import io.weicools.puremusic.model.Music;
 import io.weicools.puremusic.model.OnlineMusic;
 import io.weicools.puremusic.model.OnlineMusicList;
-import io.weicools.puremusic.model.SongListInfo;
+import io.weicools.puremusic.model.SongSheetInfo;
 import io.weicools.puremusic.model.enums.LoadStateEnum;
+import io.weicools.puremusic.service.AudioPlayer;
 import io.weicools.puremusic.ui.base.BaseActivity;
 import io.weicools.puremusic.util.ConstantUtil;
 import io.weicools.puremusic.util.FileUtil;
+import io.weicools.puremusic.util.ImageUtil;
 import io.weicools.puremusic.util.ScreenUtil;
 import io.weicools.puremusic.util.ToastUtil;
 import io.weicools.puremusic.util.ViewUtil;
@@ -44,15 +51,16 @@ public class OnlineMusicActivity extends BaseActivity implements AutoLoadListVie
     private static final int MUSIC_LIST_SIZE = 20;
 
     private Context mContext;
-    private AutoLoadListView lvOnlineMusic;
     private LinearLayout llLoading;
     private LinearLayout llLoadFail;
+    private AutoLoadListView lvOnlineMusic;
+
     private View vHeader;
-    private SongListInfo mListInfo;
+    private SongSheetInfo mListInfo;
     private OnlineMusicList mOnlineMusicList;
     private List<OnlineMusic> mMusicList = new ArrayList<>();
     private OnlineMusicAdapter mAdapter = new OnlineMusicAdapter(mMusicList);
-    private ProgressDialog mProgressDialog;
+
     private int mOffset = 0;
 
     @Override
@@ -60,22 +68,14 @@ public class OnlineMusicActivity extends BaseActivity implements AutoLoadListVie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_online_music);
         mContext = this;
-        if (!checkServiceAlive()) {
-            return;
-        }
 
-        mListInfo = (SongListInfo) getIntent().getSerializableExtra(ConstantUtil.MUSIC_LIST_TYPE);
-        setTitle(mListInfo.getTitle());
-
-        initView();
-        initListener();
-        onLoad();
+        initViews();
     }
 
-    private void initView() {
-        lvOnlineMusic = findViewById(R.id.lv_online_music_list);
+    private void initViews() {
         llLoading = findViewById(R.id.ll_loading);
         llLoadFail = findViewById(R.id.ll_load_fail);
+        lvOnlineMusic = findViewById(R.id.lv_online_music_list);
 
         vHeader = LayoutInflater.from(this).inflate(R.layout.activity_online_music_list_header, null);
         AbsListView.LayoutParams params = new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtil.dp2px(150));
@@ -83,18 +83,15 @@ public class OnlineMusicActivity extends BaseActivity implements AutoLoadListVie
         lvOnlineMusic.addHeaderView(vHeader, null, false);
         lvOnlineMusic.setAdapter(mAdapter);
         lvOnlineMusic.setOnLoadListener(this);
-        mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setMessage(getString(R.string.loading));
         ViewUtil.changeViewState(lvOnlineMusic, llLoading, llLoadFail, LoadStateEnum.LOADING);
-    }
 
-    private void initListener() {
         lvOnlineMusic.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 play((OnlineMusic) parent.getAdapter().getItem(position));
             }
         });
+
         mAdapter.setOnMoreClickListener(new OnMoreClickListener() {
             @Override
             public void onMoreClick(int position) {
@@ -123,6 +120,14 @@ public class OnlineMusicActivity extends BaseActivity implements AutoLoadListVie
                 dialog.show();
             }
         });
+    }
+
+    @Override
+    protected void onServiceBound() {
+        mListInfo = (SongSheetInfo) getIntent().getSerializableExtra(ConstantUtil.MUSIC_LIST_TYPE);
+        setTitle(mListInfo.getTitle());
+
+        onLoad();
     }
 
     @Override
@@ -178,40 +183,39 @@ public class OnlineMusicActivity extends BaseActivity implements AutoLoadListVie
         tvTitle.setText(mOnlineMusicList.getBillboard().getName());
         tvUpdateDate.setText(getString(R.string.recent_update, mOnlineMusicList.getBillboard().getUpdate_date()));
         tvComment.setText(mOnlineMusicList.getBillboard().getComment());
-        // TODO: 2017/11/27 Glide 4
-//        Glide.with(this)
-//                .load(mOnlineMusicList.getBillboard().getPic_s640())
-//                .into(new SimpleTarget<Bitmap>() {
-//                    @Override
-//                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-//                        ivCover.setImageBitmap(resource);
-//                        ivHeaderBg.setImageBitmap(ImageUtil.blur(resource));
-//                    }
-//                });
-//                .asBitmap()
-//                .placeholder(R.drawable.default_cover)
-//                .error(R.drawable.default_cover)
-//                .override(200, 200)
+        Glide.with(this)
+                .load(mOnlineMusicList.getBillboard().getPic_s640())
+                .asBitmap()
+                .placeholder(R.drawable.default_cover)
+                .error(R.drawable.default_cover)
+                .override(200, 200)
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                        ivCover.setImageBitmap(resource);
+                        ivHeaderBg.setImageBitmap(ImageUtil.blur(resource));
+                    }
+                });
     }
 
     private void play(OnlineMusic onlineMusic) {
         new PlayOnlineMusic(this, onlineMusic) {
             @Override
             public void onPrepare() {
-                mProgressDialog.show();
+                showProgress();
             }
 
             @Override
             public void onExecuteSuccess(Music music) {
-                mProgressDialog.cancel();
-                getMusicService().play(music);
-                ToastUtil.showShort(mContext, getString(R.string.now_play, music.getTitle()));
+                cancelProgress();
+                AudioPlayer.getInstance().addAndPlay(music);
+                ToastUtil.showShort("已添加到播放列表");
             }
 
             @Override
             public void onExecuteFail(Exception e) {
-                mProgressDialog.cancel();
-                ToastUtil.showShort(mContext, getString(R.string.unable_to_play));
+                cancelProgress();
+                ToastUtil.showShort(R.string.unable_to_play);
             }
         }.execute();
     }
@@ -220,41 +224,43 @@ public class OnlineMusicActivity extends BaseActivity implements AutoLoadListVie
         new ShareOnlineMusic(this, onlineMusic.getTitle(), onlineMusic.getSong_id()) {
             @Override
             public void onPrepare() {
-                mProgressDialog.show();
+                showProgress();
             }
 
             @Override
             public void onExecuteSuccess(Void aVoid) {
-                mProgressDialog.cancel();
+                cancelProgress();
             }
 
             @Override
             public void onExecuteFail(Exception e) {
-                mProgressDialog.cancel();
+                cancelProgress();
             }
         }.execute();
     }
 
     private void artistInfo(OnlineMusic onlineMusic) {
-        ArtistInfoActivity.start(this, onlineMusic.getTing_uid());
+        Intent intent = new Intent(this, ArtistInfoActivity.class);
+        intent.putExtra(ConstantUtil.TING_UID, onlineMusic.getTing_uid());
+        startActivity(intent);
     }
 
     private void download(final OnlineMusic onlineMusic) {
         new DownloadOnlineMusic(this, onlineMusic) {
             @Override
             public void onPrepare() {
-                mProgressDialog.show();
+                showProgress();
             }
 
             @Override
             public void onExecuteSuccess(Void aVoid) {
-                mProgressDialog.cancel();
+                cancelProgress();
                 ToastUtil.showShort(mContext, getString(R.string.now_download, onlineMusic.getTitle()));
             }
 
             @Override
             public void onExecuteFail(Exception e) {
-                mProgressDialog.cancel();
+                cancelProgress();
                 ToastUtil.showShort(mContext, getString(R.string.unable_to_download));
             }
         }.execute();

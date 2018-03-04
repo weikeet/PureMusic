@@ -1,7 +1,6 @@
 package io.weicools.puremusic.ui.activity;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -9,50 +8,44 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import io.weicools.puremusic.AppCache;
 import io.weicools.puremusic.R;
 import io.weicools.puremusic.adapter.FragmentAdapter;
-import io.weicools.puremusic.executor.NavMenuExecutor;
-import io.weicools.puremusic.model.Music;
+import io.weicools.puremusic.executor.ControlPanel;
+import io.weicools.puremusic.service.AudioPlayer;
 import io.weicools.puremusic.service.MusicService;
-import io.weicools.puremusic.service.OnPlayerEventListener;
+import io.weicools.puremusic.service.QuitTimer;
 import io.weicools.puremusic.ui.base.BaseActivity;
 import io.weicools.puremusic.ui.fragment.LocalMusicFragment;
 import io.weicools.puremusic.ui.fragment.PlayFragment;
-import io.weicools.puremusic.ui.fragment.PlayListFragment;
+import io.weicools.puremusic.ui.fragment.SongSheetFragment;
 import io.weicools.puremusic.util.ConstantUtil;
-import io.weicools.puremusic.util.CoverLoader;
+import io.weicools.puremusic.util.Preferences;
 import io.weicools.puremusic.util.SystemUtil;
+import io.weicools.puremusic.util.ToastUtil;
 
-public class MainActivity extends BaseActivity implements View.OnClickListener, OnPlayerEventListener,
+public class MainActivity extends BaseActivity implements View.OnClickListener, QuitTimer.OnTimerListener,
         NavigationView.OnNavigationItemSelectedListener, ViewPager.OnPageChangeListener {
 
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
-    private ImageView mIvMenu;
-    private ImageView mIvSearch;
     private TextView mTvLocalMusic;
     private TextView mTvOnlineMusic;
     private ViewPager mViewPager;
     private FrameLayout mBottomPlayBar;
-    private ImageView mIvPlayBarCover;
-    private TextView mTvPlayBarTitle;
-    private TextView mTvPlayBarArtist;
-    private ImageView mIvPlayBarPlay;
-    private ImageView mIvPlayBarNext;
-    private ProgressBar mProgressBar;
 
     private LocalMusicFragment mLocalMusicFragment;
-    private PlayListFragment mPlayListFragment;
+    private SongSheetFragment mSongSheetFragment;
     private PlayFragment mPlayFragment;
+    private ControlPanel mControlPanel;
+
     private boolean mIsPlayFragmentShow = false;
     private MenuItem timerItem;
 
@@ -61,77 +54,47 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (!checkServiceAlive()) {
-            return;
-        }
-
-        getMusicService().setOnPlayEventListener(this);
-
-        initView();
-        initListener();
-        onChangeImpl(getMusicService().getPlayingMusic());
-        parseIntent();
+        initViews();
     }
 
-    private void initView() {
+    private void initViews() {
         mDrawerLayout = findViewById(R.id.draw_layout);
         mNavigationView = findViewById(R.id.nav_view);
 
-        mIvMenu = findViewById(R.id.iv_menu);
-        mIvSearch = findViewById(R.id.iv_search);
+        ImageView ivMenu = findViewById(R.id.iv_menu);
+        ImageView ivSearch = findViewById(R.id.iv_search);
+        mViewPager = findViewById(R.id.view_pager);
         mTvLocalMusic = findViewById(R.id.tv_local_music);
         mTvOnlineMusic = findViewById(R.id.tv_online_music);
-        mViewPager = findViewById(R.id.view_pager);
-
         mBottomPlayBar = findViewById(R.id.bottom_play_bar);
-        mIvPlayBarCover = findViewById(R.id.iv_play_bar_cover);
-        mTvPlayBarTitle = findViewById(R.id.tv_play_bar_title);
-        mTvPlayBarArtist = findViewById(R.id.tv_play_bar_artist);
-        mIvPlayBarPlay = findViewById(R.id.iv_play_bar_play);
-        mIvPlayBarNext = findViewById(R.id.iv_play_bar_next);
-        mProgressBar = findViewById(R.id.play_progressbar);
+
+        ivMenu.setOnClickListener(this);
+        ivSearch.setOnClickListener(this);
+        mTvLocalMusic.setOnClickListener(this);
+        mTvOnlineMusic.setOnClickListener(this);
+        mViewPager.addOnPageChangeListener(this);
+        mBottomPlayBar.setOnClickListener(this);
+        mNavigationView.setNavigationItemSelectedListener(this);
 
         // add navigation header
         View navigationHeader = LayoutInflater.from(this).inflate(R.layout.navigation_header, mNavigationView, false);
         mNavigationView.addHeaderView(navigationHeader);
 
         mLocalMusicFragment = new LocalMusicFragment();
-        mPlayListFragment = new PlayListFragment();
+        mSongSheetFragment = new SongSheetFragment();
         FragmentAdapter fragmentAdapter = new FragmentAdapter(getSupportFragmentManager());
         fragmentAdapter.addFragment(mLocalMusicFragment);
-        fragmentAdapter.addFragment(mPlayListFragment);
+        fragmentAdapter.addFragment(mSongSheetFragment);
         mViewPager.setAdapter(fragmentAdapter);
         mTvLocalMusic.setSelected(true);
     }
 
-    protected void initListener() {
-        mIvMenu.setOnClickListener(this);
-        mIvSearch.setOnClickListener(this);
-        mTvLocalMusic.setOnClickListener(this);
-        mTvOnlineMusic.setOnClickListener(this);
-        mViewPager.addOnPageChangeListener(this);
-        mBottomPlayBar.setOnClickListener(this);
-        mIvPlayBarPlay.setOnClickListener(this);
-        mIvPlayBarNext.setOnClickListener(this);
-        mNavigationView.setNavigationItemSelectedListener(this);
-    }
-
-    private void onChangeImpl(Music music) {
-        if (music == null) {
-            return;
-        }
-
-        Bitmap cover = CoverLoader.getInstance().loadThumbnail(music);
-        mIvPlayBarCover.setImageBitmap(cover);
-        mTvPlayBarTitle.setText(music.getTitle());
-        mTvPlayBarArtist.setText(music.getArtist());
-        mIvPlayBarPlay.setSelected(getMusicService().isPlaying() || getMusicService().isPreparing());
-        mProgressBar.setMax((int) music.getDuration());
-        mProgressBar.setProgress((int) getMusicService().getCurrentPosition());
-
-        if (mLocalMusicFragment != null && mLocalMusicFragment.isAdded()) {
-            mLocalMusicFragment.onItemPlay();
-        }
+    @Override
+    protected void onServiceBound() {
+        mControlPanel = new ControlPanel(mBottomPlayBar);
+        AudioPlayer.getInstance().addOnPlayEventListener(mControlPanel);
+        QuitTimer.getInstance().setOnTimerListener(this);
+        parseIntent();
     }
 
     private void parseIntent() {
@@ -140,14 +103,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             showPlayingFragment();
             setIntent(new Intent());
         }
-    }
-
-    private void play() {
-        getMusicService().playPause();
-    }
-
-    private void next() {
-        getMusicService().next();
     }
 
     private void showPlayingFragment() {
@@ -163,7 +118,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         } else {
             ft.show(mPlayFragment);
         }
-
         ft.commitAllowingStateLoss();
         mIsPlayFragmentShow = true;
     }
@@ -177,22 +131,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
-        setIntent(intent);
-        parseIntent();
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
-        mDrawerLayout.closeDrawers();
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                item.setChecked(false);
-            }
-        }, 500);
-
-        return NavMenuExecutor.onNavigationItemSelected(item, this);
+    public void onTimer(long remain) {
+        if (timerItem == null) {
+            timerItem = mNavigationView.getMenu().findItem(R.id.action_timer);
+        }
+        String title = getString(R.string.menu_timer);
+        timerItem.setTitle(remain == 0 ? title : SystemUtil.formatTime(title + "(mm:ss)", remain));
     }
 
     @Override
@@ -221,7 +165,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 mDrawerLayout.openDrawer(GravityCompat.START);
                 break;
             case R.id.iv_search:
-                // startActivity(new Intent(this, ));
+                startActivity(new Intent(this, SearchActivity.class));
                 break;
             case R.id.tv_local_music:
                 mViewPager.setCurrentItem(0);
@@ -232,69 +176,55 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             case R.id.bottom_play_bar:
                 showPlayingFragment();
                 break;
-            case R.id.iv_play_bar_play:
-                play();
-                break;
-            case R.id.iv_play_bar_next:
-                next();
+            default:
                 break;
         }
     }
 
     @Override
-    public void onChange(Music music) {
-        onChangeImpl(music);
-        if (mPlayFragment != null && mPlayFragment.isAdded()) {
-            // mPlayFragment.onChange(music);
-        }
-    }
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        mDrawerLayout.closeDrawers();
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                item.setChecked(false);
+            }
+        }, 500);
 
-    @Override
-    public void onPlayerStart() {
-        mIvPlayBarPlay.setSelected(true);
-        if (mPlayFragment != null && mPlayFragment.isAdded()) {
-            // mPlayFragment.onPlayerStart();
+        switch (item.getItemId()) {
+            case R.id.action_setting:
+                startActivity(new Intent(this, SettingActivity.class));
+                return true;
+            case R.id.action_about:
+                // TODO: 2018/3/4 start about
+                //startActivity(new Intent(this, AboutActivity.class));
+                return true;
+            case R.id.action_night:
+                Preferences.saveNightMode(!Preferences.isNightMode());
+                this.recreate();
+                break;
+            case R.id.action_timer:
+                new AlertDialog.Builder(this)
+                        .setTitle(R.string.menu_timer)
+                        .setItems(this.getResources().getStringArray(R.array.timer_text), (dialog, which) -> {
+                            int[] times = this.getResources().getIntArray(R.array.timer_int);
+                            QuitTimer.getInstance().start(times[which] * 60 * 1000);
+                            if (times[which] > 0) {
+                                ToastUtil.showShort(this.getString(R.string.timer_set, String.valueOf(times[which])));
+                            } else {
+                                ToastUtil.showShort(R.string.timer_cancel);
+                            }
+                        })
+                        .show();
+                return true;
+            case R.id.action_exit:
+                finish();
+                MusicService.startCommand(this, ConstantUtil.ACTION_STOP);
+                return true;
+            default:
+                break;
         }
-    }
-
-    @Override
-    public void onPlayerPause() {
-        mIvPlayBarPlay.setSelected(false);
-        if (mPlayFragment != null && mPlayFragment.isAdded()) {
-            // mPlayFragment.onPlayerPause();
-        }
-    }
-
-    @Override
-    public void onPublish(int progress) {
-        mProgressBar.setProgress(progress);
-        if (mPlayFragment != null && mPlayFragment.isAdded()) {
-            // mPlayFragment.onPublish(progress);
-        }
-    }
-
-    @Override
-    public void onBufferingUpdate(int percent) {
-        if (mPlayFragment != null && mPlayFragment.isAdded()) {
-            // mPlayFragment.onBufferingUpdate(percent);
-        }
-    }
-
-    @Override
-    public void onTimer(long remain) {
-        if (timerItem == null) {
-            timerItem = mNavigationView.getMenu().findItem(R.id.action_timer);
-        }
-
-        String title = getString(R.string.menu_timer);
-        timerItem.setTitle(remain == 0 ? title : SystemUtil.formatTime(title + "(mm:ss)", remain));
-    }
-
-    @Override
-    public void onMusicListUpdate() {
-        if (mLocalMusicFragment != null && mLocalMusicFragment.isAdded()) {
-            mLocalMusicFragment.onMusicListUpdate();
-        }
+        return false;
     }
 
     @Override
@@ -317,7 +247,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         super.onSaveInstanceState(outState);
         outState.putInt(ConstantUtil.VIEW_PAGER_INDEX, mViewPager.getCurrentItem());
         mLocalMusicFragment.onSaveInstanceState(outState);
-        mPlayListFragment.onSaveInstanceState(outState);
+        mSongSheetFragment.onSaveInstanceState(outState);
     }
 
     @Override
@@ -327,17 +257,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             public void run() {
                 mViewPager.setCurrentItem(savedInstanceState.getInt(ConstantUtil.VIEW_PAGER_INDEX), false);
                 mLocalMusicFragment.onRestoreInstanceState(savedInstanceState);
-                mPlayListFragment.onRestoreInstanceState(savedInstanceState);
+                mSongSheetFragment.onRestoreInstanceState(savedInstanceState);
             }
         });
     }
 
     @Override
     protected void onDestroy() {
-        MusicService service = AppCache.getInstance().getMusicService();
-        if (service != null) {
-            service.setOnPlayEventListener(null);
-        }
+        AudioPlayer.getInstance().removeOnPlayEventListener(mControlPanel);
+        QuitTimer.getInstance().setOnTimerListener(null);
         super.onDestroy();
     }
 }

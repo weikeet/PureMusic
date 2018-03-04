@@ -12,7 +12,6 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
-import butterknife.BindView;
 import io.weicools.puremusic.R;
 import io.weicools.puremusic.http.HttpCallback;
 import io.weicools.puremusic.http.HttpClient;
@@ -170,7 +169,6 @@ public class SongSheetAdapter extends BaseAdapter {
     }
 
     private static class ViewHolderProfile {
-        @BindView(R.id.tv_profile)
         private TextView tvProfile;
 
         ViewHolderProfile(View view) {
@@ -179,7 +177,6 @@ public class SongSheetAdapter extends BaseAdapter {
     }
 
     private static class ViewHolderMusicList {
-        @BindView(R.id.iv_cover)
         private ImageView ivCover;
         private TextView tvMusic1;
         private TextView tvMusic2;

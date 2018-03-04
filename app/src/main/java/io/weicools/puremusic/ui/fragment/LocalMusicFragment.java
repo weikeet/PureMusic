@@ -1,6 +1,8 @@
 package io.weicools.puremusic.ui.fragment;
 
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.DialogInterface;
@@ -8,6 +10,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -22,31 +25,37 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.io.File;
+import com.hwangjr.rxbus.annotation.Subscribe;
+import com.hwangjr.rxbus.annotation.Tag;
 
-import io.weicools.puremusic.AppCache;
+import java.io.File;
+import java.util.List;
+
 import io.weicools.puremusic.R;
-import io.weicools.puremusic.adapter.LocalMusicAdapter;
 import io.weicools.puremusic.adapter.OnMoreClickListener;
+import io.weicools.puremusic.adapter.PlayListAdapter;
+import io.weicools.puremusic.app.AppCache;
 import io.weicools.puremusic.model.Music;
-import io.weicools.puremusic.ui.base.BaseFragment;
+import io.weicools.puremusic.service.AudioPlayer;
+import io.weicools.puremusic.ui.activity.MusicInfoActivity;
 import io.weicools.puremusic.util.ConstantUtil;
+import io.weicools.puremusic.util.MusicUtil;
+import io.weicools.puremusic.util.PermissionUtil;
 import io.weicools.puremusic.util.ToastUtil;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class LocalMusicFragment extends BaseFragment implements OnMoreClickListener, AdapterView.OnItemClickListener {
+public class LocalMusicFragment extends Fragment implements OnMoreClickListener, AdapterView.OnItemClickListener {
 
     private ListView mLvLocalMusic;
     private TextView mTvEmpty;
 
-    private LocalMusicAdapter mAdapter;
+    private PlayListAdapter mAdapter;
 
     public LocalMusicFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,70 +71,82 @@ public class LocalMusicFragment extends BaseFragment implements OnMoreClickListe
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mAdapter = new LocalMusicAdapter();
+        mAdapter = new PlayListAdapter(AppCache.getInstance().getMusicList());
         mAdapter.setOnMoreClickListener(this);
         mLvLocalMusic.setAdapter(mAdapter);
-        if (getMusicService().getPlayingMusic() != null && getMusicService().getPlayingMusic().getType() == Music.Type.LOCAL) {
-            mLvLocalMusic.setSelection(getMusicService().getPlayingPosition());
-        }
-
-        updateView();
-    }
-
-    @Override
-    protected void setListener() {
         mLvLocalMusic.setOnItemClickListener(this);
-    }
 
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-        getMusicService().play(position);
-    }
-
-    public void onItemPlay() {
-        updateView();
-        if (getMusicService().getPlayingMusic().getType() == Music.Type.LOCAL) {
-            mLvLocalMusic.smoothScrollToPosition(getMusicService().getPlayingPosition());
-        }
-    }
-
-    public void onMusicListUpdate() {
-        updateView();
-    }
-
-    private void updateView() {
         if (AppCache.getInstance().getMusicList().isEmpty()) {
-            mTvEmpty.setVisibility(View.VISIBLE);
-        } else {
-            mTvEmpty.setVisibility(View.GONE);
+            scanMusic();
         }
+    }
 
-        mAdapter.updatePlayingPosition(getMusicService());
-        mAdapter.notifyDataSetChanged();
+    @Subscribe(tags = {@Tag(ConstantUtil.SCAN_MUSIC)})
+    public void scanMusic() {
+        mLvLocalMusic.setVisibility(View.GONE);
+        mTvEmpty.setVisibility(View.VISIBLE);
+        PermissionUtil.with(this)
+                .permissions(Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .result(new PermissionUtil.Result() {
+                    @SuppressLint("StaticFieldLeak")
+                    @Override
+                    public void onGranted() {
+                        new AsyncTask<Void, Void, List<Music>>() {
+                            @Override
+                            protected List<Music> doInBackground(Void... params) {
+                                return MusicUtil.scanMusic(getContext());
+                            }
+
+                            @Override
+                            protected void onPostExecute(List<Music> musicList) {
+                                AppCache.getInstance().getMusicList().clear();
+                                AppCache.getInstance().getMusicList().addAll(musicList);
+                                mLvLocalMusic.setVisibility(View.VISIBLE);
+                                mTvEmpty.setVisibility(View.GONE);
+                                mAdapter.notifyDataSetChanged();
+                            }
+                        }.execute();
+                    }
+
+                    @Override
+                    public void onDenied() {
+                        ToastUtil.showShort(R.string.no_permission_storage);
+                        mLvLocalMusic.setVisibility(View.VISIBLE);
+                        mTvEmpty.setVisibility(View.GONE);
+                    }
+                })
+                .request();
     }
 
     @Override
-    public void onMoreClick(int position) {
-        final Music music = AppCache.getInstance().getMusicList().get(position);
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Music music = AppCache.getInstance().getMusicList().get(position);
+        AudioPlayer.getInstance().addAndPlay(music);
+        ToastUtil.showShort("已添加到播放列表");
+    }
+
+    @Override
+    public void onMoreClick(final int position) {
+        Music music = AppCache.getInstance().getMusicList().get(position);
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(music.getTitle());
-        builder.setItems(R.array.local_music_dialog, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                switch (i) {
-                    case 0:// 分享
-                        shareMusic(music);
-                        break;
-                    case 1:// 设为铃声
-                        requestSetRingtone(music);
-                        break;
-                    case 2:// 查看歌曲信息
-                        //MusicInfoActivity.start(getContext(), music);
-                        break;
-                    case 3:// 删除
-                        deleteMusic(music);
-                        break;
-                }
+        builder.setItems(R.array.local_music_dialog, (dialog1, which) -> {
+            switch (which) {
+                case 0:// 分享
+                    shareMusic(music);
+                    break;
+                case 1:// 设为铃声
+                    requestSetRingtone(music);
+                    break;
+                case 2:// 查看歌曲信息
+                    Intent intent = new Intent(getContext(), MusicInfoActivity.class);
+                    intent.putExtra(ConstantUtil.MUSIC, music);
+                    startActivity(intent);
+                    break;
+                case 3:// 删除
+                    deleteMusic(music);
+                    break;
             }
         });
         builder.show();
@@ -182,16 +203,8 @@ public class LocalMusicFragment extends BaseFragment implements OnMoreClickListe
             public void onClick(DialogInterface dialog, int which) {
                 File file = new File(music.getPath());
                 if (file.delete()) {
-                    boolean playing = (music == getMusicService().getPlayingMusic());
                     AppCache.getInstance().getMusicList().remove(music);
-                    if (playing) {
-                        getMusicService().stop();
-                        getMusicService().playPause();
-                    } else {
-                        getMusicService().updatePlayingPosition();
-                    }
-                    updateView();
-
+                    mAdapter.notifyDataSetChanged();
                     // 刷新媒体库
                     Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://".concat(music.getPath())));
                     getContext().sendBroadcast(intent);
@@ -221,6 +234,8 @@ public class LocalMusicFragment extends BaseFragment implements OnMoreClickListe
     }
 
     public void onRestoreInstanceState(final Bundle savedInstanceState) {
+        // FIXME: 2018/3/4 null
+        if (mLvLocalMusic != null) {
         mLvLocalMusic.post(new Runnable() {
             @Override
             public void run() {
@@ -229,5 +244,6 @@ public class LocalMusicFragment extends BaseFragment implements OnMoreClickListe
                 mLvLocalMusic.setSelectionFromTop(position, offset);
             }
         });
+        }
     }
 }

@@ -51,12 +51,11 @@ public class MediaSessionManager {
     }
 
     public void updatePlaybackState() {
-        int state = (mMusicService.isPlaying() || mMusicService.isPreparing())
-                ? PlaybackStateCompat.STATE_PLAYING : PlaybackStateCompat.STATE_PAUSED;
+        int state = (AudioPlayer.getInstance().isPlaying() || AudioPlayer.getInstance().isPreparing()) ? PlaybackStateCompat.STATE_PLAYING : PlaybackStateCompat.STATE_PAUSED;
         mMediaSession.setPlaybackState(
                 new PlaybackStateCompat.Builder()
                         .setActions(MEDIA_SESSION_ACTIONS)
-                        .setState(state, mMusicService.getCurrentPosition(), 1)
+                        .setState(state, AudioPlayer.getInstance().getAudioPosition(), 1)
                         .build());
     }
 
@@ -82,32 +81,32 @@ public class MediaSessionManager {
     private MediaSessionCompat.Callback callback = new MediaSessionCompat.Callback() {
         @Override
         public void onPlay() {
-            mMusicService.playPause();
+            AudioPlayer.getInstance().playPause();
         }
 
         @Override
         public void onPause() {
-            mMusicService.playPause();
+            AudioPlayer.getInstance().playPause();
         }
 
         @Override
         public void onSkipToNext() {
-            mMusicService.next();
+            AudioPlayer.getInstance().next();
         }
 
         @Override
         public void onSkipToPrevious() {
-            mMusicService.prev();
+            AudioPlayer.getInstance().prev();
         }
 
         @Override
         public void onStop() {
-            mMusicService.stop();
+            AudioPlayer.getInstance().stopPlayer();
         }
 
         @Override
         public void onSeekTo(long pos) {
-            mMusicService.seekTo((int) pos);
+            AudioPlayer.getInstance().seekTo((int) pos);
         }
     };
 }

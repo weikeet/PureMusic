@@ -30,7 +30,7 @@ public class AppCache {
     // 本地歌曲列表
     private final List<Music> mMusicList = new ArrayList<>();
     // 歌单列表
-    private final List<SongSheetInfo> mSongSheetInfos = new ArrayList<>();
+    private final List<SongSheetInfo> mSongSheetList = new ArrayList<>();
     private final List<Activity> mActivityStack = new ArrayList<>();
     private final LongSparseArray<DownloadMusicInfo> mDownloadList = new LongSparseArray<>();
 
@@ -71,8 +71,8 @@ public class AppCache {
         return mMusicList;
     }
 
-    public List<SongSheetInfo> getSongSheetInfos() {
-        return mSongSheetInfos;
+    public List<SongSheetInfo> getSongSheetList() {
+        return mSongSheetList;
     }
 
     public void clearStack() {

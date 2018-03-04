@@ -69,6 +69,10 @@
 
         <activity android:name=".ui.activity.OnlineMusicActivity" />
         <activity android:name=".ui.activity.ArtistInfoActivity" />
+        <activity android:name=".ui.activity.MusicInfoActivity" />
+        <activity android:name=".ui.activity.PlayListActivity" />
+        <activity android:name=".ui.activity.SearchActivity" />
+        <activity android:name=".ui.activity.SettingActivity"/>
     </application>
 
 </manifest>

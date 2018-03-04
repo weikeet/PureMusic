@@ -14,7 +14,7 @@ import java.io.Serializable;
  * Created on 2017/10/28 by weicools.
  */
 
-@Entity(nameInDb = "Music")
+@Entity(nameInDb = "SystemMessage")
 public class Music implements Serializable {
     private static final long serialVersionUID = 536871008;
 

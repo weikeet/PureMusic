@@ -37,9 +37,6 @@
     <string name="tv_local_music">我的音乐</string>
     <string name="tv_online_music">在线音乐</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
     <string name="timer_set">设置成功，将于%s分钟后关闭</string>
     <string name="timer_cancel">定时停止播放已取消</string>
     <string name="download_success">%s下载完成</string>
@@ -82,4 +79,24 @@
     <string name="loading_3">3.加载中…</string>
     <string name="song_title">歌曲</string>
     <string name="song_singer">歌手 - 专辑</string>
+    <string name="music_info_title">标题</string>
+    <string name="music_info_artist">艺术家</string>
+    <string name="music_info_album">专辑</string>
+    <string name="music_info_duration">播放时长</string>
+    <string name="music_info_file_name">文件名称</string>
+    <string name="music_info_file_size">文件大小</string>
+    <string name="music_info_file_path">文件路径</string>
+    <string name="search_empty">未找到相关结果</string>
+    <string name="search_tips">请输入歌手名或者曲名</string>
+    <string name="network">网络</string>
+    <string name="mobile_network_play">使用移动网络播放</string>
+    <string name="mobile_network_download">使用移动网络下载</string>
+    <string name="play">播放</string>
+    <string name="sound_effect">音效调节</string>
+    <string name="device_not_support">您的设备不支持此功能</string>
+    <string name="no_music">无音乐</string>
+    <string name="play_time_start">00:00</string>
+    <string name="mode_shuffle">随机播放</string>
+    <string name="mode_one">单曲循环</string>
+    <string name="mode_loop">列表循环</string>
 </resources>

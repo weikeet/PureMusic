@@ -99,7 +99,7 @@ public class PlayListAdapter extends BaseAdapter {
             tvTitle = view.findViewById(R.id.tv_title);
             tvArtist = view.findViewById(R.id.tv_artist);
             ivMore = view.findViewById(R.id.iv_more);
-            vDivider = view.findViewById(R.id.v_divider);
+            vDivider = view.findViewById(R.id.view_divider);
         }
     }
 }

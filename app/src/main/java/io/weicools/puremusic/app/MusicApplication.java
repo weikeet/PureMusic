@@ -1,14 +1,12 @@
 package io.weicools.puremusic.app;
 
 import android.app.Application;
+import android.content.Intent;
 
 import com.squareup.leakcanary.LeakCanary;
-import com.zhy.http.okhttp.OkHttpUtils;
 
-import java.util.concurrent.TimeUnit;
-
-import io.weicools.puremusic.http.HttpInterceptor;
-import okhttp3.OkHttpClient;
+import io.weicools.puremusic.data.database.DBManager;
+import io.weicools.puremusic.service.MusicService;
 
 /**
  * Author: weicools
@@ -23,23 +21,13 @@ public class MusicApplication extends Application {
 
         AppCache.getInstance().init(this);
         ActivityObserver.init(this);
-        initOkHttpUtils();
+        DBManager.getInstance().init(this);
 
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            // This process is dedicated to LeakCanary for heap analysis.
-            // You should not init your app in this process.
-            return;
+        Intent intent = new Intent(this, MusicService.class);
+        startService(intent);
+
+        if (!LeakCanary.isInAnalyzerProcess(this)) {
+            LeakCanary.install(this);
         }
-        LeakCanary.install(this);
-    }
-
-    private void initOkHttpUtils() {
-        OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .connectTimeout(10, TimeUnit.SECONDS)
-                .readTimeout(10, TimeUnit.SECONDS)
-                .writeTimeout(10, TimeUnit.SECONDS)
-                .addInterceptor(new HttpInterceptor())
-                .build();
-        OkHttpUtils.initClient(okHttpClient);
     }
 }
