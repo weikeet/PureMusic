@@ -8,4 +8,13 @@
     <dimen name="play_bar_height">57dp</dimen>
     <dimen name="screen_tips_top">80dp</dimen>
     <dimen name="divider_height">0.5dp</dimen>
+
+    <dimen name="main_card_margin_horizontal">8dp</dimen>
+    <dimen name="main_card_margin_vertical">8dp</dimen>
+    <dimen name="main_card_margin_horizontal_big_activity">8dp</dimen>
+
+    <dimen name="card_title_margin_top">24dp</dimen>
+    <dimen name="card_title_margin">16dp</dimen>
+    <dimen name="card_subtitle_margin">16dp</dimen>
+    <dimen name="card_button_margin">8dp</dimen>
 </resources>

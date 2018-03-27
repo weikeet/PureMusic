@@ -197,8 +197,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 startActivity(new Intent(this, SettingActivity.class));
                 return true;
             case R.id.action_about:
-                // TODO: 2018/3/4 start about
-                //startActivity(new Intent(this, AboutActivity.class));
+                startActivity(new Intent(this, AboutActivity.class));
                 return true;
             case R.id.action_night:
                 Preferences.saveNightMode(!Preferences.isNightMode());
