@@ -1,14 +1,11 @@
 package io.weicools.puremusic.module.playing;
 
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -28,11 +25,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.weicools.puremusic.R;
-import io.weicools.puremusic.executor.SearchLrc;
 import io.weicools.puremusic.data.Music;
 import io.weicools.puremusic.enums.PlayModeEnum;
-import io.weicools.puremusic.service.AudioPlayer;
+import io.weicools.puremusic.executor.SearchLrc;
 import io.weicools.puremusic.interfaze.OnPlayerEventListener;
+import io.weicools.puremusic.module.base.BaseFragment;
+import io.weicools.puremusic.service.AudioPlayer;
 import io.weicools.puremusic.util.ConstantUtil;
 import io.weicools.puremusic.util.CoverLoader;
 import io.weicools.puremusic.util.FileUtil;
@@ -47,7 +45,7 @@ import me.wcy.lrcview.LrcView;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PlayFragment extends Fragment implements View.OnClickListener,
+public class PlayFragment extends BaseFragment implements View.OnClickListener,
         ViewPager.OnPageChangeListener, SeekBar.OnSeekBarChangeListener, OnPlayerEventListener,
         LrcView.OnPlayClickListener {
 
@@ -70,7 +68,6 @@ public class PlayFragment extends Fragment implements View.OnClickListener,
     private LrcView mLrcViewFull;
     private SeekBar sbVolume;
 
-    private Handler mHandler;
     private AudioManager mAudioManager;
     private List<View> mViewPagerContent;
     private int mLastProgress;
@@ -110,7 +107,6 @@ public class PlayFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mHandler = new Handler(Looper.getMainLooper());
 
         initSystemBar();
         initViewPager();
@@ -118,7 +114,17 @@ public class PlayFragment extends Fragment implements View.OnClickListener,
         initPlayMode();
         onChangeImpl(AudioPlayer.getInstance().getPlayMusic());
         AudioPlayer.getInstance().addOnPlayEventListener(this);
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        IntentFilter filter = new IntentFilter(ConstantUtil.VOLUME_CHANGED_ACTION);
+        getContext().registerReceiver(mVolumeReceiver, filter);
+    }
+
+    @Override
+    protected void setListener() {
         ivBack.setOnClickListener(this);
         ivMode.setOnClickListener(this);
         ivPlay.setOnClickListener(this);
@@ -127,13 +133,6 @@ public class PlayFragment extends Fragment implements View.OnClickListener,
         sbProgress.setOnSeekBarChangeListener(this);
         sbVolume.setOnSeekBarChangeListener(this);
         vpPlay.addOnPageChangeListener(this);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        IntentFilter filter = new IntentFilter(ConstantUtil.VOLUME_CHANGED_ACTION);
-        getContext().registerReceiver(mVolumeReceiver, filter);
     }
 
     /**
@@ -291,6 +290,8 @@ public class PlayFragment extends Fragment implements View.OnClickListener,
             case R.id.iv_prev:
                 prev();
                 break;
+            default:
+                break;
         }
     }
 
@@ -344,6 +345,8 @@ public class PlayFragment extends Fragment implements View.OnClickListener,
             case SINGLE:
                 mode = PlayModeEnum.LOOP;
                 ToastUtil.showShort(R.string.mode_loop);
+                break;
+            default:
                 break;
         }
         Preferences.savePlayMode(mode.value());

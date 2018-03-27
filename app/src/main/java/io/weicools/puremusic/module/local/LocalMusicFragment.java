@@ -1,6 +1,5 @@
 package io.weicools.puremusic.module.local;
 
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.ContentUris;
@@ -35,6 +34,7 @@ import io.weicools.puremusic.R;
 import io.weicools.puremusic.interfaze.OnMoreClickListener;
 import io.weicools.puremusic.app.AppCache;
 import io.weicools.puremusic.data.Music;
+import io.weicools.puremusic.module.base.BaseFragment;
 import io.weicools.puremusic.service.AudioPlayer;
 import io.weicools.puremusic.module.musicinfo.MusicInfoActivity;
 import io.weicools.puremusic.util.ConstantUtil;
@@ -45,7 +45,7 @@ import io.weicools.puremusic.util.ToastUtil;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class LocalMusicFragment extends Fragment implements OnMoreClickListener, AdapterView.OnItemClickListener {
+public class LocalMusicFragment extends BaseFragment implements OnMoreClickListener, AdapterView.OnItemClickListener {
 
     private ListView mLvLocalMusic;
     private TextView mTvEmpty;
@@ -76,12 +76,12 @@ public class LocalMusicFragment extends Fragment implements OnMoreClickListener,
         mLvLocalMusic.setOnItemClickListener(this);
 
         if (AppCache.getInstance().getMusicList().isEmpty()) {
-            scanMusic();
+            scanMusic(null);
         }
     }
 
     @Subscribe(tags = {@Tag(ConstantUtil.SCAN_MUSIC)})
-    public void scanMusic() {
+    public void scanMusic(Object object) {
         mLvLocalMusic.setVisibility(View.GONE);
         mTvEmpty.setVisibility(View.VISIBLE);
         PermissionUtil.with(this)
@@ -132,19 +132,25 @@ public class LocalMusicFragment extends Fragment implements OnMoreClickListener,
         builder.setTitle(music.getTitle());
         builder.setItems(R.array.local_music_dialog, (dialog1, which) -> {
             switch (which) {
-                case 0:// 分享
+                case 0:
+                    // 分享
                     shareMusic(music);
                     break;
-                case 1:// 设为铃声
+                case 1:
+                    // 设为铃声
                     requestSetRingtone(music);
                     break;
-                case 2:// 查看歌曲信息
+                case 2:
+                    // 查看歌曲信息
                     Intent intent = new Intent(getContext(), MusicInfoActivity.class);
                     intent.putExtra(ConstantUtil.MUSIC, music);
                     startActivity(intent);
                     break;
-                case 3:// 删除
+                case 3:
+                    // 删除
                     deleteMusic(music);
+                    break;
+                default:
                     break;
             }
         });
@@ -174,7 +180,7 @@ public class LocalMusicFragment extends Fragment implements OnMoreClickListener,
             }
 
             if (cursor.moveToFirst() && cursor.getCount() > 0) {
-                String _id = cursor.getString(0);
+                String id = cursor.getString(0);
                 ContentValues values = new ContentValues();
                 values.put(MediaStore.Audio.Media.IS_MUSIC, true);
                 values.put(MediaStore.Audio.Media.IS_RINGTONE, true);
@@ -184,7 +190,7 @@ public class LocalMusicFragment extends Fragment implements OnMoreClickListener,
 
                 getContext().getContentResolver().update(uri, values, MediaStore.MediaColumns.DATA + "=?",
                         new String[]{music.getPath()});
-                Uri newUri = ContentUris.withAppendedId(uri, Long.valueOf(_id));
+                Uri newUri = ContentUris.withAppendedId(uri, Long.valueOf(id));
                 RingtoneManager.setActualDefaultRingtoneUri(getContext(), RingtoneManager.TYPE_RINGTONE, newUri);
                 ToastUtil.showShort(getContext(), getContext().getString(R.string.setting_ringtone_success));
             }
@@ -233,8 +239,6 @@ public class LocalMusicFragment extends Fragment implements OnMoreClickListener,
     }
 
     public void onRestoreInstanceState(final Bundle savedInstanceState) {
-        // FIXME: 2018/3/4 null
-        if (mLvLocalMusic != null) {
         mLvLocalMusic.post(new Runnable() {
             @Override
             public void run() {
@@ -243,6 +247,5 @@ public class LocalMusicFragment extends Fragment implements OnMoreClickListener,
                 mLvLocalMusic.setSelectionFromTop(position, offset);
             }
         });
-        }
     }
 }

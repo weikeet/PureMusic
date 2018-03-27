@@ -15,12 +15,13 @@ import java.util.List;
 import io.weicools.puremusic.R;
 import io.weicools.puremusic.app.AppCache;
 import io.weicools.puremusic.data.SongSheetInfo;
+import io.weicools.puremusic.module.base.BaseFragment;
 import io.weicools.puremusic.util.ConstantUtil;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SongSheetFragment extends Fragment implements AdapterView.OnItemClickListener {
+public class SongSheetFragment extends BaseFragment implements AdapterView.OnItemClickListener {
     private ListView mLvPlaylist;
 
     private List<SongSheetInfo> mSongList;
@@ -76,16 +77,13 @@ public class SongSheetFragment extends Fragment implements AdapterView.OnItemCli
     }
 
     public void onRestoreInstanceState(final Bundle savedInstanceState) {
-        // FIXME: 2018/3/4 null
-        if (mLvPlaylist != null) {
-            mLvPlaylist.post(new Runnable() {
-                @Override
-                public void run() {
-                    int position = savedInstanceState.getInt(ConstantUtil.PLAYLIST_POSITION);
-                    int offset = savedInstanceState.getInt(ConstantUtil.PLAYLIST_OFFSET);
-                    mLvPlaylist.setSelectionFromTop(position, offset);
-                }
-            });
-        }
+        mLvPlaylist.post(new Runnable() {
+            @Override
+            public void run() {
+                int position = savedInstanceState.getInt(ConstantUtil.PLAYLIST_POSITION);
+                int offset = savedInstanceState.getInt(ConstantUtil.PLAYLIST_OFFSET);
+                mLvPlaylist.setSelectionFromTop(position, offset);
+            }
+        });
     }
 }
