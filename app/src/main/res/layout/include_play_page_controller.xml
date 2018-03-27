@@ -59,7 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toStartOf="@+id/iv_play"
-            android:src="@drawable/play_btn_prev_selector"
+            android:src="@drawable/ic_skip_previous_white_36dp"
             tools:ignore="ContentDescription" />
 
         <ImageView
@@ -76,7 +76,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toEndOf="@id/iv_play"
-            android:src="@drawable/play_btn_next_selector"
+            android:src="@drawable/ic_skip_next_white_36dp"
             tools:ignore="ContentDescription" />
     </RelativeLayout>
 </LinearLayout>

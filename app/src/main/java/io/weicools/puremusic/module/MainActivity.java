@@ -22,7 +22,6 @@ import io.weicools.puremusic.module.base.BaseActivity;
 import io.weicools.puremusic.module.local.LocalMusicFragment;
 import io.weicools.puremusic.module.online.SongSheetFragment;
 import io.weicools.puremusic.module.playing.PlayFragment;
-import io.weicools.puremusic.module.search.SearchActivity;
 import io.weicools.puremusic.service.AudioPlayer;
 import io.weicools.puremusic.service.QuitTimer;
 import io.weicools.puremusic.util.ConstantUtil;
@@ -135,15 +134,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.iv_search:
-                startActivity(new Intent(this, SearchActivity.class));
-                break;
-            case R.id.tv_local_music:
-                mViewPager.setCurrentItem(0);
-                break;
-            case R.id.tv_online_music:
-                mViewPager.setCurrentItem(1);
-                break;
+//            case R.id.iv_search:
+//                startActivity(new Intent(this, SearchActivity.class));
+//                break;
+//            case R.id.tv_local_music:
+//                mViewPager.setCurrentItem(0);
+//                break;
+//            case R.id.tv_online_music:
+//                mViewPager.setCurrentItem(1);
+//                break;
             case R.id.bottom_play_bar:
                 showPlayingFragment();
                 break;

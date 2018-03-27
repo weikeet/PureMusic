@@ -63,7 +63,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@null"
-            android:src="@drawable/ic_play_bar_btn_next" />
+            android:src="@drawable/ic_skip_next_24dp" />
 
         <ImageView
             android:id="@+id/v_play_bar_playlist"

@@ -53,7 +53,7 @@
             android:layout_height="fill_parent"
             android:contentDescription="@null"
             android:scaleType="center"
-            android:src="@drawable/ic_status_bar_pause_dark" />
+            android:src="@drawable/ic_pause_circle_outline_black_36dp" />
 
         <ImageView
             android:id="@+id/iv_next"
@@ -61,6 +61,6 @@
             android:layout_height="fill_parent"
             android:contentDescription="@null"
             android:scaleType="center"
-            android:src="@drawable/ic_status_bar_next_dark" />
+            android:src="@drawable/ic_skip_next_black_36dp" />
     </LinearLayout>
 </LinearLayout>

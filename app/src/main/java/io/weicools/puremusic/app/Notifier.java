@@ -81,7 +81,7 @@ public class Notifier {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                 .setContentIntent(pendingIntent)
-                .setSmallIcon(R.drawable.ic_notifications_white_24dp)
+                .setSmallIcon(R.drawable.ic_notification)
                 .setCustomContentView(getRemoteViews(context, music, isPlaying));
         return builder.build();
     }
@@ -120,19 +120,19 @@ public class Notifier {
     private int getPlayIconRes(boolean isLightNotificationTheme, boolean isPlaying) {
         if (isPlaying) {
             return isLightNotificationTheme
-                    ? R.drawable.ic_status_bar_pause_dark_selector
-                    : R.drawable.ic_status_bar_pause_light_selector;
+                    ? R.drawable.ic_pause_circle_outline_black_36dp
+                    : R.drawable.ic_pause_circle_outline_white_36dp;
         } else {
             return isLightNotificationTheme
-                    ? R.drawable.ic_status_bar_play_dark_selector
-                    : R.drawable.ic_status_bar_play_light_selector;
+                    ? R.drawable.ic_play_circle_outline_black_36dp
+                    : R.drawable.ic_play_circle_outline_white_36dp;
         }
     }
 
     private int getNextIconRes(boolean isLightNotificationTheme) {
         return isLightNotificationTheme
-                ? R.drawable.ic_status_bar_next_dark_selector
-                : R.drawable.ic_status_bar_next_light_selector;
+                ? R.drawable.ic_skip_next_black_36dp
+                : R.drawable.ic_skip_next_white_36dp;
     }
 
     private boolean isLightNotificationTheme(Context context) {
