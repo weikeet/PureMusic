@@ -28,6 +28,11 @@ public class PlayListActivity extends BaseActivity implements OnMoreClickListene
     }
 
     @Override
+    public boolean canBack() {
+        return true;
+    }
+
+    @Override
     protected void onServiceBound() {
         mAdapter = new PlayListAdapter(AudioPlayer.getInstance().getMusicList());
         mAdapter.setIsPlaylist(true);

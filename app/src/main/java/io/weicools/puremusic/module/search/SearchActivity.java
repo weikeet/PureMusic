@@ -53,6 +53,11 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
     }
 
     @Override
+    public boolean canBack() {
+        return true;
+    }
+
+    @Override
     protected int getDarkTheme() {
         return R.style.AppThemeDark_Search;
     }

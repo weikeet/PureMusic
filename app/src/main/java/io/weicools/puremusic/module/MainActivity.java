@@ -3,47 +3,40 @@ package io.weicools.puremusic.module;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AlertDialog;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import io.weicools.puremusic.R;
 import io.weicools.puremusic.executor.ControlPanel;
-import io.weicools.puremusic.service.AudioPlayer;
-import io.weicools.puremusic.service.MusicService;
-import io.weicools.puremusic.service.QuitTimer;
-import io.weicools.puremusic.module.search.SearchActivity;
 import io.weicools.puremusic.module.base.BaseActivity;
 import io.weicools.puremusic.module.local.LocalMusicFragment;
-import io.weicools.puremusic.module.playing.PlayFragment;
 import io.weicools.puremusic.module.online.SongSheetFragment;
+import io.weicools.puremusic.module.playing.PlayFragment;
+import io.weicools.puremusic.module.search.SearchActivity;
+import io.weicools.puremusic.service.AudioPlayer;
+import io.weicools.puremusic.service.QuitTimer;
 import io.weicools.puremusic.util.ConstantUtil;
-import io.weicools.puremusic.util.Preferences;
 import io.weicools.puremusic.util.SystemUtil;
-import io.weicools.puremusic.util.ToastUtil;
 
-public class MainActivity extends BaseActivity implements View.OnClickListener, QuitTimer.OnTimerListener,
-        NavigationView.OnNavigationItemSelectedListener, ViewPager.OnPageChangeListener {
+public class MainActivity extends BaseActivity implements View.OnClickListener, QuitTimer.OnTimerListener {
 
-    private DrawerLayout mDrawerLayout;
-    private NavigationView mNavigationView;
-    private TextView mTvLocalMusic;
-    private TextView mTvOnlineMusic;
+    private TabLayout mTabLayout;
     private ViewPager mViewPager;
     private FrameLayout mBottomPlayBar;
 
     private LocalMusicFragment mLocalMusicFragment;
     private SongSheetFragment mSongSheetFragment;
+    private MySheetFragment mMySheetFragment;
     private PlayFragment mPlayFragment;
     private ControlPanel mControlPanel;
 
@@ -59,35 +52,33 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void initViews() {
-        mDrawerLayout = findViewById(R.id.draw_layout);
-        mNavigationView = findViewById(R.id.nav_view);
-
-        ImageView ivMenu = findViewById(R.id.iv_menu);
-        ImageView ivSearch = findViewById(R.id.iv_search);
+        mTabLayout = findViewById(R.id.tab_layout_main);
         mViewPager = findViewById(R.id.view_pager);
-        mTvLocalMusic = findViewById(R.id.tv_local_music);
-        mTvOnlineMusic = findViewById(R.id.tv_online_music);
         mBottomPlayBar = findViewById(R.id.bottom_play_bar);
 
-        ivMenu.setOnClickListener(this);
-        ivSearch.setOnClickListener(this);
-        mTvLocalMusic.setOnClickListener(this);
-        mTvOnlineMusic.setOnClickListener(this);
-        mViewPager.addOnPageChangeListener(this);
         mBottomPlayBar.setOnClickListener(this);
-        mNavigationView.setNavigationItemSelectedListener(this);
+        List<String> titles = new ArrayList<>();
+        titles.add(getString(R.string.tab_title_main_1));
+        titles.add(getString(R.string.tab_title_main_2));
+        titles.add(getString(R.string.tab_title_main_3));
+        mTabLayout.addTab(mTabLayout.newTab().setText(titles.get(0)));
+        mTabLayout.addTab(mTabLayout.newTab().setText(titles.get(1)));
+        mTabLayout.addTab(mTabLayout.newTab().setText(titles.get(2)));
 
-        // add navigation header
-        View navigationHeader = LayoutInflater.from(this).inflate(R.layout.navigation_header, mNavigationView, false);
-        mNavigationView.addHeaderView(navigationHeader);
-
+        List<Fragment> fragments = new ArrayList<>();
         mLocalMusicFragment = new LocalMusicFragment();
         mSongSheetFragment = new SongSheetFragment();
-        FragmentAdapter fragmentAdapter = new FragmentAdapter(getSupportFragmentManager());
-        fragmentAdapter.addFragment(mLocalMusicFragment);
-        fragmentAdapter.addFragment(mSongSheetFragment);
-        mViewPager.setAdapter(fragmentAdapter);
-        mTvLocalMusic.setSelected(true);
+        mMySheetFragment = MySheetFragment.newInstance();
+        fragments.add(mLocalMusicFragment);
+        fragments.add(mMySheetFragment);
+        fragments.add(mSongSheetFragment);
+
+        mViewPager.setOffscreenPageLimit(2);
+
+        FragmentAdapter mFragmentAdapter = new FragmentAdapter(getSupportFragmentManager(), fragments, titles);
+        mViewPager.setAdapter(mFragmentAdapter);
+        mTabLayout.setupWithViewPager(mViewPager);
+        mTabLayout.setTabsFromPagerAdapter(mFragmentAdapter);
     }
 
     @Override
@@ -134,37 +125,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public void onTimer(long remain) {
         if (timerItem == null) {
-            timerItem = mNavigationView.getMenu().findItem(R.id.action_timer);
+            // FIXME: 2018/3/27
+//            timerItem = mNavigationView.getMenu().findItem(R.id.action_timer);
         }
         String title = getString(R.string.menu_timer);
         timerItem.setTitle(remain == 0 ? title : SystemUtil.formatTime(title + "(mm:ss)", remain));
     }
 
     @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-        if (position == 0) {
-            mTvLocalMusic.setSelected(true);
-            mTvOnlineMusic.setSelected(false);
-        } else {
-            mTvLocalMusic.setSelected(false);
-            mTvOnlineMusic.setSelected(true);
-        }
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-    }
-
-    @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.iv_menu:
-                mDrawerLayout.openDrawer(GravityCompat.START);
-                break;
             case R.id.iv_search:
                 startActivity(new Intent(this, SearchActivity.class));
                 break;
@@ -183,59 +153,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        mDrawerLayout.closeDrawers();
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                item.setChecked(false);
-            }
-        }, 500);
-
-        switch (item.getItemId()) {
-            case R.id.action_setting:
-                startActivity(new Intent(this, SettingActivity.class));
-                return true;
-            case R.id.action_about:
-                startActivity(new Intent(this, AboutActivity.class));
-                return true;
-            case R.id.action_night:
-                Preferences.saveNightMode(!Preferences.isNightMode());
-                this.recreate();
-                break;
-            case R.id.action_timer:
-                new AlertDialog.Builder(this)
-                        .setTitle(R.string.menu_timer)
-                        .setItems(this.getResources().getStringArray(R.array.timer_text), (dialog, which) -> {
-                            int[] times = this.getResources().getIntArray(R.array.timer_int);
-                            QuitTimer.getInstance().start(times[which] * 60 * 1000);
-                            if (times[which] > 0) {
-                                ToastUtil.showShort(this.getString(R.string.timer_set, String.valueOf(times[which])));
-                            } else {
-                                ToastUtil.showShort(R.string.timer_cancel);
-                            }
-                        })
-                        .show();
-                return true;
-            case R.id.action_exit:
-                finish();
-                MusicService.startCommand(this, ConstantUtil.ACTION_STOP);
-                return true;
-            default:
-                break;
-        }
-        return false;
-    }
-
-    @Override
     public void onBackPressed() {
         if (mPlayFragment != null && mIsPlayFragmentShow) {
             hidePlayingFragment();
-            return;
-        }
-
-        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-            mDrawerLayout.closeDrawers();
             return;
         }
 
@@ -245,7 +165,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @SuppressLint("MissingSuperCall")
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        //super.onSaveInstanceState(outState);
         outState.putInt(ConstantUtil.VIEW_PAGER_INDEX, mViewPager.getCurrentItem());
         mLocalMusicFragment.onSaveInstanceState(outState);
         mSongSheetFragment.onSaveInstanceState(outState);
@@ -268,5 +187,36 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         AudioPlayer.getInstance().removeOnPlayEventListener(mControlPanel);
         QuitTimer.getInstance().setOnTimerListener(null);
         super.onDestroy();
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
+    }
+
+    public static class FragmentAdapter extends FragmentStatePagerAdapter {
+        private List<String> mTitles;
+        private List<Fragment> mFragments;
+
+        FragmentAdapter(FragmentManager fm, List<Fragment> fragments, List<String> titles) {
+            super(fm);
+            mTitles = titles;
+            mFragments = fragments;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragments.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragments.size();
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mTitles.get(position);
+        }
     }
 }

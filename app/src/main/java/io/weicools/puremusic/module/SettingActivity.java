@@ -32,6 +32,11 @@ public class SettingActivity extends BaseActivity {
                 .commit();
     }
 
+    @Override
+    public boolean canBack() {
+        return true;
+    }
+
     public static class SettingFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener,
             Preference.OnPreferenceChangeListener {
         private Preference mSoundEffect;

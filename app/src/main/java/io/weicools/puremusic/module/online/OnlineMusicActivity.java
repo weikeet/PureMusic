@@ -114,12 +114,19 @@ public class OnlineMusicActivity extends BaseActivity implements AutoLoadListVie
                             case 2:// 下载
                                 download(onlineMusic);
                                 break;
+                            default:
+                                break;
                         }
                     }
                 });
                 dialog.show();
             }
         });
+    }
+
+    @Override
+    public boolean canBack() {
+        return true;
     }
 
     @Override

@@ -64,6 +64,11 @@ public class MusicInfoActivity extends BaseActivity implements View.OnClickListe
     }
 
     @Override
+    public boolean canBack() {
+        return true;
+    }
+
+    @Override
     protected void onServiceBound() {
         Music music = (Music) getIntent().getSerializableExtra(ConstantUtil.MUSIC);
         if (music == null || music.getType() != Music.Type.LOCAL) {

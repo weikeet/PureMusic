@@ -99,4 +99,7 @@
     <string name="mode_shuffle">随机播放</string>
     <string name="mode_one">单曲循环</string>
     <string name="mode_loop">列表循环</string>
+    <string name="tab_title_main_1">本地音乐</string>
+    <string name="tab_title_main_2">我的歌单</string>
+    <string name="tab_title_main_3">发现音乐</string>
 </resources>

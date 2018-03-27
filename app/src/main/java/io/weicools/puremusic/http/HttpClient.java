@@ -110,6 +110,14 @@ public class HttpClient {
                 });
     }
 
+    /**
+     * 查询在线音乐歌单
+     *
+     * @param type 1,2,6,7,8,11,18,20,21,22,23,24,25
+     * @param size 3
+     * @param offset 0
+     * @param callback 回调
+     */
     public static void getSongListInfo(String type, int size, int offset, @NonNull final HttpCallback<OnlineMusicList> callback) {
         OkHttpUtils.get().url(BASE_URL)
                 .addParams(PARAM_METHOD, METHOD_GET_MUSIC_LIST)

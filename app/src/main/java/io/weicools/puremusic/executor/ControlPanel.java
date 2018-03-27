@@ -1,6 +1,7 @@
 package io.weicools.puremusic.executor;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.view.View;
 import android.widget.ImageView;
@@ -9,8 +10,9 @@ import android.widget.TextView;
 
 import io.weicools.puremusic.R;
 import io.weicools.puremusic.data.Music;
-import io.weicools.puremusic.service.AudioPlayer;
 import io.weicools.puremusic.interfaze.OnPlayerEventListener;
+import io.weicools.puremusic.module.PlayListActivity;
+import io.weicools.puremusic.service.AudioPlayer;
 import io.weicools.puremusic.util.CoverLoader;
 
 /**
@@ -53,8 +55,10 @@ public class ControlPanel implements View.OnClickListener, OnPlayerEventListener
             case R.id.v_play_bar_playlist:
                 Context context = vPlayBarPlaylist.getContext();
                 // TODO: 2018/3/4 start PlayList 
-//                Intent intent = new Intent(context, PlayListActivity.class);
-//                context.startActivity(intent);
+                Intent intent = new Intent(context, PlayListActivity.class);
+                context.startActivity(intent);
+                break;
+            default:
                 break;
         }
     }
