@@ -1,5 +1,6 @@
 package io.weicools.puremusic.module;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -242,9 +243,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         super.onBackPressed();
     }
 
+    @SuppressLint("MissingSuperCall")
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
+        //super.onSaveInstanceState(outState);
         outState.putInt(ConstantUtil.VIEW_PAGER_INDEX, mViewPager.getCurrentItem());
         mLocalMusicFragment.onSaveInstanceState(outState);
         mSongSheetFragment.onSaveInstanceState(outState);
