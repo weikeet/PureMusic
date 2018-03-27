@@ -29,7 +29,7 @@
     <TextView
         android:id="@+id/tv_title"
         style="@style/AppTheme.Text"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:ellipsize="end"
@@ -37,11 +37,12 @@
         android:textSize="@dimen/text_size_common"
         app:layout_constraintBottom_toBottomOf="@+id/iv_cover"
         app:layout_constraintStart_toEndOf="@+id/iv_cover"
+        app:layout_constraintEnd_toStartOf="@id/iv_more"
         tools:text="歌曲" />
 
     <TextView
         android:id="@+id/tv_artist"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
@@ -51,6 +52,7 @@
         android:textSize="12sp"
         app:layout_constraintStart_toEndOf="@+id/iv_cover"
         app:layout_constraintTop_toTopOf="@+id/iv_cover"
+        app:layout_constraintEnd_toStartOf="@id/iv_more"
         tools:text="歌手 - 专辑" />
 
     <ImageView
