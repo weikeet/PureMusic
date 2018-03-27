@@ -19,9 +19,9 @@ import java.util.List;
 
 import io.weicools.puremusic.R;
 import io.weicools.puremusic.data.Music;
+import io.weicools.puremusic.module.MainActivity;
 import io.weicools.puremusic.receiver.StatusBarReceiver;
 import io.weicools.puremusic.service.MusicService;
-import io.weicools.puremusic.module.SplashActivity;
 import io.weicools.puremusic.util.ConstantUtil;
 import io.weicools.puremusic.util.CoverLoader;
 import io.weicools.puremusic.util.FileUtil;
@@ -53,10 +53,16 @@ public class Notifier {
     }
 
     public void showPlay(Music music) {
+        if (music == null) {
+            return;
+        }
         sMusicService.startForeground(NOTIFICATION_ID, buildNotification(sMusicService, music, true));
     }
 
     public void showPause(Music music) {
+        if (music == null) {
+            return;
+        }
         sMusicService.stopForeground(false);
         notificationManager.notify(NOTIFICATION_ID, buildNotification(sMusicService, music, false));
     }
@@ -66,7 +72,7 @@ public class Notifier {
     }
 
     private Notification buildNotification(Context context, Music music, boolean isPlaying) {
-        Intent intent = new Intent(context, SplashActivity.class);
+        Intent intent = new Intent(context, MainActivity.class);
         intent.putExtra(ConstantUtil.EXTRA_NOTIFICATION, true);
         intent.setAction(Intent.ACTION_VIEW);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
