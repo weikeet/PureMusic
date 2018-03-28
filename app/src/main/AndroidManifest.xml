@@ -69,7 +69,9 @@
         <activity android:name=".module.musicinfo.MusicInfoActivity" />
         <activity android:name=".module.PlayListActivity" />
         <activity android:name=".module.search.SearchActivity" />
-        <activity android:name=".module.SettingActivity" />
+        <activity
+            android:name=".module.SettingActivity"
+            android:label="@string/menu_setting" />
         <activity
             android:name=".module.AboutActivity"
             android:label="@string/menu_about"
