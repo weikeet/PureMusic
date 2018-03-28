@@ -102,4 +102,19 @@
     <string name="tab_title_main_1">本地音乐</string>
     <string name="tab_title_main_2">我的歌单</string>
     <string name="tab_title_main_3">发现音乐</string>
+
+    <string name="title_activity_about">关于</string>
+    <string name="about_version">版本: </string>
+    <string name="about_email_intent">关于:MaterialDesign</string>
+    <string name="about_not_found_email">没有邮件程序</string>
+    <string name="about_card1_title">Material Design Demo</string>
+    <string name="about_card1_message">嗨！很高兴见到你！</string>
+    <string name="about_card2_title">如果你喜欢这个Demo，欢迎和我联系！</string>
+    <string name="about_google_play">评价 (Google play)</string>
+    <string name="about_email">反馈 (E-mail)</string>
+    <string name="about_git_hub">源代码 (GitHub)</string>
+    <string name="about_address">Beijing, China</string>
+    <string name="about_source_licenses">开源许可</string>
+    <string name="dialog_close">关闭</string>
+    <string name="share_with">分享方式</string>
 </resources>

@@ -70,7 +70,10 @@
         <activity android:name=".module.PlayListActivity" />
         <activity android:name=".module.search.SearchActivity" />
         <activity android:name=".module.SettingActivity" />
-        <activity android:name=".module.AboutActivity" />
+        <activity
+            android:name=".module.AboutActivity"
+            android:label="@string/menu_about"
+            android:parentActivityName=".module.MainActivity" />
     </application>
 
 </manifest>
