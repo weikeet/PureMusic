@@ -32,9 +32,9 @@ public class ConstantUtil {
     public static final String ACTION_STOP = "io.weicools.puremusic.ACTION_STOP";
     public static final String SCAN_MUSIC = "scan_music";
 
-    public static String APP_URL = "https://play.google.com/store/apps/details?id=com.eajy.materialdesigndemo";
+    public static String APP_URL = "https://github.com/lecymeng/PureMusic/releases";
     public static String DESIGNED_BY = "Designed by Weicools in China";
     public static String SHARE_CONTENT = "A beautiful app designed with Material Design:\n" + APP_URL + "\n- " + DESIGNED_BY;
     public static String EMAIL = "zhang1570682285@gmail.com";
-    public static String GIT_HUB = "https://github.com/lecymeng/PureDesignSamples";
+    public static String GIT_HUB = "https://github.com/lecymeng/PureMusic";
 }
