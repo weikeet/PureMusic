@@ -9,6 +9,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -22,10 +24,14 @@ import io.weicools.puremusic.module.base.BaseActivity;
 import io.weicools.puremusic.module.local.LocalMusicFragment;
 import io.weicools.puremusic.module.online.SongSheetFragment;
 import io.weicools.puremusic.module.playing.PlayFragment;
+import io.weicools.puremusic.module.search.SearchActivity;
 import io.weicools.puremusic.service.AudioPlayer;
+import io.weicools.puremusic.service.MusicService;
 import io.weicools.puremusic.service.QuitTimer;
 import io.weicools.puremusic.util.ConstantUtil;
+import io.weicools.puremusic.util.Preferences;
 import io.weicools.puremusic.util.SystemUtil;
+import io.weicools.puremusic.util.ToastUtil;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener, QuitTimer.OnTimerListener {
 
@@ -134,20 +140,57 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-//            case R.id.iv_search:
-//                startActivity(new Intent(this, SearchActivity.class));
-//                break;
-//            case R.id.tv_local_music:
-//                mViewPager.setCurrentItem(0);
-//                break;
-//            case R.id.tv_online_music:
-//                mViewPager.setCurrentItem(1);
-//                break;
             case R.id.bottom_play_bar:
                 showPlayingFragment();
                 break;
             default:
                 break;
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_search:
+                startActivity(new Intent(this, SearchActivity.class));
+                return true;
+            case R.id.action_night:
+                Preferences.saveNightMode(!Preferences.isNightMode());
+                this.recreate();
+                return true;
+            case R.id.action_timer:
+                new AlertDialog.Builder(this)
+                        .setTitle(R.string.menu_timer)
+                        .setItems(this.getResources().getStringArray(R.array.timer_text), (dialog, which) -> {
+                            int[] times = this.getResources().getIntArray(R.array.timer_int);
+                            QuitTimer.getInstance().start(times[which] * 60 * 1000);
+                            if (times[which] > 0) {
+                                ToastUtil.showShort(this.getString(R.string.timer_set, String.valueOf(times[which])));
+                            } else {
+                                ToastUtil.showShort(R.string.timer_cancel);
+                            }
+                        })
+                        .show();
+                return true;
+            case R.id.action_setting:
+                startActivity(new Intent(this, SettingActivity.class));
+                return true;
+            case R.id.action_about:
+                startActivity(new Intent(this, AboutActivity.class));
+                return true;
+            case R.id.action_exit:
+                finish();
+                MusicService.startCommand(this, ConstantUtil.ACTION_STOP);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 

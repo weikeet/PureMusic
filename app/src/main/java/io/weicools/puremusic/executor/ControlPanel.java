@@ -24,7 +24,6 @@ public class ControlPanel implements View.OnClickListener, OnPlayerEventListener
     private TextView tvPlayBarTitle;
     private TextView tvPlayBarArtist;
     private ImageView ivPlayBarPlay;
-    private ImageView ivPlayBarNext;
     private ImageView vPlayBarPlaylist;
     private ProgressBar mProgressBar;
 
@@ -33,12 +32,10 @@ public class ControlPanel implements View.OnClickListener, OnPlayerEventListener
         tvPlayBarTitle = view.findViewById(R.id.tv_play_bar_title);
         tvPlayBarArtist = view.findViewById(R.id.tv_play_bar_artist);
         ivPlayBarPlay = view.findViewById(R.id.iv_play_bar_play);
-        ivPlayBarNext = view.findViewById(R.id.iv_play_bar_next);
         vPlayBarPlaylist = view.findViewById(R.id.v_play_bar_playlist);
         mProgressBar = view.findViewById(R.id.play_progressbar);
         
         ivPlayBarPlay.setOnClickListener(this);
-        ivPlayBarNext.setOnClickListener(this);
         vPlayBarPlaylist.setOnClickListener(this);
         onChange(AudioPlayer.getInstance().getPlayMusic());
     }
@@ -49,12 +46,8 @@ public class ControlPanel implements View.OnClickListener, OnPlayerEventListener
             case R.id.iv_play_bar_play:
                 AudioPlayer.getInstance().playPause();
                 break;
-            case R.id.iv_play_bar_next:
-                AudioPlayer.getInstance().next();
-                break;
             case R.id.v_play_bar_playlist:
                 Context context = vPlayBarPlaylist.getContext();
-                // TODO: 2018/3/4 start PlayList 
                 Intent intent = new Intent(context, PlayListActivity.class);
                 context.startActivity(intent);
                 break;

@@ -6,16 +6,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.support.v4.app.NotificationCompat;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.RemoteViews;
-import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import io.weicools.puremusic.R;
 import io.weicools.puremusic.data.Music;
@@ -100,104 +92,16 @@ public class Notifier {
         remoteViews.setTextViewText(R.id.tv_title, title);
         remoteViews.setTextViewText(R.id.tv_subtitle, subtitle);
 
-        boolean isLightNotificationTheme = isLightNotificationTheme(sMusicService);
-
         Intent playIntent = new Intent(StatusBarReceiver.ACTION_STATUS_BAR);
         playIntent.putExtra(StatusBarReceiver.EXTRA, StatusBarReceiver.EXTRA_PLAY_PAUSE);
         PendingIntent playPendingIntent = PendingIntent.getBroadcast(context, 0, playIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        remoteViews.setImageViewResource(R.id.iv_play_pause, getPlayIconRes(isLightNotificationTheme, isPlaying));
         remoteViews.setOnClickPendingIntent(R.id.iv_play_pause, playPendingIntent);
 
         Intent nextIntent = new Intent(StatusBarReceiver.ACTION_STATUS_BAR);
         nextIntent.putExtra(StatusBarReceiver.EXTRA, StatusBarReceiver.EXTRA_NEXT);
         PendingIntent nextPendingIntent = PendingIntent.getBroadcast(context, 1, nextIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        remoteViews.setImageViewResource(R.id.iv_next, getNextIconRes(isLightNotificationTheme));
         remoteViews.setOnClickPendingIntent(R.id.iv_next, nextPendingIntent);
 
         return remoteViews;
-    }
-
-    private int getPlayIconRes(boolean isLightNotificationTheme, boolean isPlaying) {
-        if (isPlaying) {
-            return isLightNotificationTheme
-                    ? R.drawable.ic_pause_circle_outline_black_36dp
-                    : R.drawable.ic_pause_circle_outline_white_36dp;
-        } else {
-            return isLightNotificationTheme
-                    ? R.drawable.ic_play_circle_outline_black_36dp
-                    : R.drawable.ic_play_circle_outline_white_36dp;
-        }
-    }
-
-    private int getNextIconRes(boolean isLightNotificationTheme) {
-        return isLightNotificationTheme
-                ? R.drawable.ic_skip_next_black_36dp
-                : R.drawable.ic_skip_next_white_36dp;
-    }
-
-    private boolean isLightNotificationTheme(Context context) {
-        int notificationTextColor = getNotificationTextColor(context);
-        return isSimilarColor(Color.BLACK, notificationTextColor);
-    }
-
-    private int getNotificationTextColor(Context context) {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
-        Notification notification = builder.build();
-        RemoteViews remoteViews = notification.contentView;
-        if (remoteViews == null) {
-            return Color.BLACK;
-        }
-        int layoutId = remoteViews.getLayoutId();
-        ViewGroup notificationLayout = (ViewGroup) LayoutInflater.from(context).inflate(layoutId, null);
-        TextView title = notificationLayout.findViewById(android.R.id.title);
-        if (title != null) {
-            return title.getCurrentTextColor();
-        } else {
-            return findTextColor(notificationLayout);
-        }
-    }
-
-    /**
-     * 如果通过 android.R.id.title 无法获得 title ，
-     * 则通过遍历 notification 布局找到 textSize 最大的 TextView ，应该就是 title 了。
-     */
-    private int findTextColor(ViewGroup notificationLayout) {
-        List<TextView> textViewList = new ArrayList<>();
-        findTextView(notificationLayout, textViewList);
-
-        float maxTextSize = -1;
-        TextView maxTextView = null;
-        for (TextView textView : textViewList) {
-            if (textView.getTextSize() > maxTextSize) {
-                maxTextView = textView;
-            }
-        }
-
-        if (maxTextView != null) {
-            return maxTextView.getCurrentTextColor();
-        }
-
-        return Color.BLACK;
-    }
-
-    private void findTextView(View view, List<TextView> textViewList) {
-        if (view instanceof ViewGroup) {
-            ViewGroup viewGroup = (ViewGroup) view;
-            for (int i = 0; i < viewGroup.getChildCount(); i++) {
-                findTextView(viewGroup.getChildAt(i), textViewList);
-            }
-        } else if (view instanceof TextView) {
-            textViewList.add((TextView) view);
-        }
-    }
-
-    private boolean isSimilarColor(int baseColor, int color) {
-        int simpleBaseColor = baseColor | 0xff000000;
-        int simpleColor = color | 0xff000000;
-        int baseRed = Color.red(simpleBaseColor) - Color.red(simpleColor);
-        int baseGreen = Color.green(simpleBaseColor) - Color.green(simpleColor);
-        int baseBlue = Color.blue(simpleBaseColor) - Color.blue(simpleColor);
-        double value = Math.sqrt(baseRed * baseRed + baseGreen * baseGreen + baseBlue * baseBlue);
-        return value < 180.0;
     }
 }

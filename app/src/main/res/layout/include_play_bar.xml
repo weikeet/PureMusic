@@ -53,24 +53,18 @@
 
         <ImageView
             android:id="@+id/iv_play_bar_play"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:contentDescription="@null"
-            android:src="@drawable/play_bar_btn_play_pause_selector" />
-
-        <ImageView
-            android:id="@+id/iv_play_bar_next"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@null"
-            android:src="@drawable/ic_skip_next_24dp" />
+            android:src="@drawable/ic_bottom_play_pause_selector" />
 
         <ImageView
             android:id="@+id/v_play_bar_playlist"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:contentDescription="@null"
-            android:src="@drawable/ic_format_list_bulleted" />
+            android:layout_marginStart="10dp"
+            android:src="@drawable/ic_bottom_queue_music" />
     </LinearLayout>
 
     <ProgressBar

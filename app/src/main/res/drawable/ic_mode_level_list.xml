@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <level-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:drawable="@drawable/ic_play_btn_loop"
+        android:drawable="@drawable/ic_mode_repeat"
         android:maxLevel="0"/>
     <item
-        android:drawable="@drawable/ic_play_btn_shuffle"
+        android:drawable="@drawable/ic_mode_shuffle"
         android:maxLevel="1"/>
     <item
-        android:drawable="@drawable/ic_play_btn_one"
+        android:drawable="@drawable/ic_mode_repeat_one"
         android:maxLevel="2"/>
 </level-list>

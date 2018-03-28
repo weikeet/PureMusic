@@ -14,33 +14,32 @@
             android:id="@id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:popupTheme="@style/AppTheme.PopupOverlay">
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:paddingEnd="0dp"
-                android:paddingStart="4dp">
+        <!--<LinearLayout-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:gravity="center_vertical"-->
+        <!--android:paddingEnd="0dp"-->
+        <!--android:paddingStart="4dp">-->
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/logo"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:src="@mipmap/ic_launcher"
-                    android:visibility="gone"
-                    app:civ_border_color="#ededed"
-                    app:civ_border_width="2dp" />
+        <!--<de.hdodenhof.circleimageview.CircleImageView-->
+        <!--android:id="@+id/logo"-->
+        <!--android:layout_width="36dp"-->
+        <!--android:layout_height="36dp"-->
+        <!--android:src="@mipmap/ic_launcher"-->
+        <!--android:visibility="gone"-->
+        <!--app:civ_border_color="#ededed"-->
+        <!--app:civ_border_width="2dp"/>-->
 
-                <TextView
-                    android:id="@+id/title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/app_name"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-        </android.support.v7.widget.Toolbar>
+        <!--<TextView-->
+        <!--android:id="@+id/title"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="@string/app_name"-->
+        <!--android:textSize="20sp"/>-->
+        <!--</LinearLayout>-->
+        <!--</android.support.v7.widget.Toolbar>-->
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tab_layout_main"
